@@ -136,33 +136,39 @@ inline void Vector3::Normalize() {
 }
 
 inline Vector3 Vector3::Normalized() const {
-	return Vector3();
+	float inverseMagnitude = 1.0f / Magnitude();
+	return Vector3( (this *= inverseMagnitude) );
 }
 
-static inline float Vector3::DotProduct(const Vector3& a, const Vector3& other)  {
-	return 0.0f;
+static inline float Vector3::DotProduct(const Vector3& a, const Vector3& b)  {
+	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
 static inline float Vector3::Distance(const Vector3& a, const Vector3& b) {
-	return 0.0f;
+	return (a - b).Magnitude();
 }
 
-static inline float Vector3::Angle(const Vector3& a, const Vector3& other)  {
-	return 0.0f;
+static inline float Vector3::Angle(const Vector3& a, const Vector3& b)  {
+	float result = DotProduct(a, b);
+	return result / (a.Magnitude() * b.Magnitude());
 }
 
-static inline Vector3 Vector3::CrossProduct(const Vector3& a, const Vector3& other)  {
-	return Vector3();
+static inline Vector3 Vector3::CrossProduct(const Vector3& a, const Vector3& b)  {
+	return Vector3(a.y * b.z - a.z * b.y, 
+								 a.z * b.x - a.x * b.z,
+								 a.x * b.y - a.y * b.x);
 }
 
-static inline Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float t) {
-	return Vector3();
+static inline Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float time) {
+	//TODO clamp time
+	return Vector3( (a * time + b * (1.0f - time)));
 }
 
-static inline Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float t) {
-	return Vector3();
+static inline Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float time) {
+	return Vector3( (a * time + b * (1.0f - time)));
 }
 
 static inline Vector3 Vector3::Reflect(const Vector3& direction, const Vector3& normal) {
-	return Vector3();
+	normal.Normalize();
+	return Vector3( (direction - 2.0f * DotProduct(direction , normal) * normal) );
 }

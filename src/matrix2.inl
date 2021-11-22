@@ -1,0 +1,126 @@
+
+#include "matrix2.h"
+
+inline Matrix2x2::Matrix2x2() {
+	m[0] = 0; 
+	m[1] = 0;
+	m[2] = 0;
+	m[3] = 0;
+}
+
+inline Matrix2x2::Matrix2x2(float a[4]) {
+	m[0] = a[0];
+	m[1] = a[1];
+	m[2] = a[2];
+	m[3] = a[3];
+}
+
+inline Matrix2x2::Matrix2x2(float a) {
+	m[0] = a;
+	m[1] = a;
+	m[2] = a;
+	m[3] = a;
+}
+
+inline Matrix2x2::Matrix2x2(const Vector2& a, const Vector2& b) {
+	m[0] = a.x;
+	m[1] = a.y;
+	m[2] = b.y;
+	m[3] = b.y;
+}
+
+inline Matrix2x2::Matrix2x2(const Matrix2x2& copy) {
+	m[0] = copy[0];
+	m[1] = copy[1];
+	m[2] = copy[2];
+	m[3] = copy[3];
+}
+
+inline Matrix2x2::~Matrix2x2() { }
+
+inline Matrix2x2 Matrix2x2::operator+(const Matrix2x2& other) const {
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator+=(const Matrix2x2& other) {
+}
+
+inline Matrix2x2 Matrix2x2::operator+(float value) const {
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator+=(float value) {
+}
+
+inline Matrix2x2 Matrix2x2::operator-(const Matrix2x2& other) const {
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator-=(const Matrix2x2& other) {
+}
+
+inline Matrix2x2 Matrix2x2::operator-(float value) const {	
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator-=(float value) {
+}
+
+
+inline Matrix2x2 Matrix2x2::operator*(float value) const {
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator*=(float value) {
+}
+
+inline Matrix2x2 Matrix2x2::operator/(float value) const {
+	return Matrix2x2();
+}
+
+inline void Matrix2x2::operator/=(float value) {
+}
+
+
+inline bool Matrix2x2::operator==(const Matrix2x2& other) const {
+	return true;
+}
+
+inline bool Matrix2x2::operator!=(const Matrix2x2& other) const {
+	return true;
+}
+
+inline void Matrix2x2::operator=(const Matrix2x2& other) {
+}
+
+inline Matrix2x2 Matrix2x2::Identity() const {
+	return Matrix2x2();
+}
+
+inline float Matrix2x2::Determinant() const {
+	return 0.0f;
+}
+
+inline Matrix2x2 Matrix2x2::Inverse() const {
+	return Matrix2x2();
+}
+
+inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
+	return Matrix2x2();
+}
+
+inline Matrix2x2 Matrix2x2::Adjoint() const {
+	return Matrix2x2();
+}
+
+inline Matrix2x2 Matrix2x2::Transpose() const {
+	return Matrix2x2();
+}
+
+inline Vector2 Matrix2x2::GetLine(int line) const {
+	return Vector2();
+}
+
+inline Vector2 Matrix2x2::GetColum(int line) const {	
+	return Vector2();
+}
