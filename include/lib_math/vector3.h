@@ -36,13 +36,13 @@ class Vector3 {
  	float Magnitude() const;
  	float SqrMagnitude() const;
 
- 	void Scale(float Vector3& other);
+ 	void Scale(const Vector3& other);
  	void Normalize();
  	Vector3 Normlaized() const;
 
  	static float DotProduct(const Vector3& a, const Vector3& b);
  	static float Distance(const Vector3& a, const Vector3& b);
- 	static float Angle(const Vector3& a, const Vecto3& b)M
+ 	static float Angle(const Vector3& a, const Vecto3& b);
 
  	static Vector3 Lerp(const Vector3& a, const Vector3& b, float time);
  	static Vector3 LerpUnclamped(const Vector3& a, const Vector3& b, float time);

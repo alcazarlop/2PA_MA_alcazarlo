@@ -39,7 +39,7 @@ class Vector2 {
 	void Normalize();
 	Vector2 Normalized() const;
 
-	static float Distnace(const Vector2 a, const Vector2 b);
+	static float Distance(const Vector2 a, const Vector2 b);
 	static float DotProduct(const Vector2 a, const Vector2 b);
 
 	static Vector2 Lerp(const Vector2, const Vector2, float time);

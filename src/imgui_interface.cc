@@ -5,6 +5,7 @@ void ImGuiInit(SDL_Window* window, SDL_Renderer* renderer){
 	ImGui::CreateContext();
   ImGui_ImplSDL2_InitForSDLRenderer(window);
   ImGui_ImplSDLRenderer_Init(renderer);
+  ImGui::SetNextWindowSize(ImVec2(320, 400));
 }
 
 void ImGuiRenderInit(SDL_Window* window){
@@ -31,9 +32,7 @@ void ImGuiExit(){
 void ImGuiShowData(Database* database, Info** info){
 
   static bool open = false;
-  static char* value = '\0';
 
-  ImGui::SetNextWindowSize(ImVec2(320, 400));
   ImGui::Begin("SQL Window", nullptr);
 
   ImGui::Text("Database status:"); 
@@ -43,11 +42,11 @@ void ImGuiShowData(Database* database, Info** info){
 
   if(ImGui::SmallButton(open ? " Close Test Database " : " Open Test Database ")){
     if(!open){
-      SQLInit(database, "../data/test.db");
+      SQLInit(database, info, "../data/test.db");
       open = true;
     }
     else{
-      SQLClose(database->db);
+      SQLClose(database);
       open = false;
     }
   }
@@ -58,9 +57,7 @@ void ImGuiShowData(Database* database, Info** info){
     if(ImGui::Button("Execute")){
       SQLExecute(database, info);
     }
-    if(ImGui::CollapsingHeader("Test")){
-      ShowTableData(info);
-    }
+    ShowTableData(info);  
   }
 
   ImGui::End();
@@ -71,8 +68,10 @@ void ShowTableData(Info** head){
   if(nullptr != *head){
 
     for(Info* node = *head; node != nullptr; node = node->next){
-      ImGui::Text("Name: %s", node->colname);
-      ImGui::Text("Value: %s", node->value);
+      if(ImGui::CollapsingHeader(node->value)){
+        ImGui::Text("Name: %s", node->colname);
+        ImGui::Text("Value: %s", node->value);
+      }
     }
     ImGui::Spacing();
   }

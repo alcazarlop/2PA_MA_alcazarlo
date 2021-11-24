@@ -1,7 +1,12 @@
 
 #include "sql_interface.h"
 
-void SQLInit(Database* database, const char* path){
+void SQLInit(Database* database, Info** info, const char* path){
+
+	database->sql_query = (char*) calloc(kQuerySize, sizeof(char));
+	database->err_msg = (char*) calloc(kQuerySize, sizeof(char));
+	memset(database->sql_query, '\0', kQuerySize);
+	memset(database->err_msg, '\0', kQuerySize);
 
 	database->rc = sqlite3_open(path, &database->db);
 
@@ -9,6 +14,9 @@ void SQLInit(Database* database, const char* path){
 		fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(database->db));
 		sqlite3_close(database->db);
 	}
+
+	database->sql_query = "SELECT name FROM sqlite_master where type ='table'";
+	SQLExecute(database, info);
 
 }
 
@@ -26,9 +34,11 @@ void SQLExecute(Database* database, Info** info){
 
 }
 
-void SQLClose(sqlite3* db)
+void SQLClose(Database *database)
 {
-	sqlite3_close(db);
+	free(database->err_msg);
+	free(database->sql_query);
+	sqlite3_close(database->db);
 }
 
 int callback(void* notused, int argc, char** argv, char** azcolname){
@@ -38,7 +48,6 @@ int callback(void* notused, int argc, char** argv, char** azcolname){
 	for(int i = 0; i < argc; ++i){
 		InsertList(head, argv[i], azcolname[i]);
 	}
-
 	return 0;
 }
 
@@ -48,6 +57,7 @@ void InsertList(Info** head, char* argv, char* azcolname){
 
 	node->value = (char*) calloc(kMaxInfoSize, sizeof(char));
 	node->colname = (char*) calloc(kMaxInfoSize, sizeof(char));
+
 	memset(node->value,'\0', kMaxInfoSize);
 	memset(node->colname,'\0', kMaxInfoSize);
 
@@ -68,12 +78,18 @@ void ClearList(Info** head){
 
 		while(node){
 			next = node->next;
-			free(node->colname); node->colname = nullptr;
 			free(node->value); node->value =nullptr;
+			free(node->colname); node->colname = nullptr;
 			free(node);
 			node = next;
 		}
 	}
 	else return;
 
+}
+
+void Queries(){
+
+
+	
 }

@@ -72,6 +72,9 @@ inline Matrix2x2 Matrix2x2::operator*(float value) const {
 }
 
 inline void Matrix2x2::operator*=(float value) {
+
+
+
 }
 
 inline Matrix2x2 Matrix2x2::operator/(float value) const {
@@ -106,7 +109,15 @@ inline Matrix2x2 Matrix2x2::Inverse() const {
 }
 
 inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
-	return Matrix2x2();
+
+	Matrix2x2 result;
+
+	result.m[0] = this.m[0] * other.m[0] + this.m[2] * other.m[1];
+	result.m[1] = this.m[1] * other.m[0] + this.m[3] * other.m[1];
+	result.m[2] = this.m[2] * other.m[0] + this.m[2] * other.m[3];
+	result.m[3] = this.m[1] * other.m[2] + this.m[3] * other.m[3];
+
+	return result;
 }
 
 inline Matrix2x2 Matrix2x2::Adjoint() const {

@@ -1,14 +1,14 @@
 
-#include <stdio.h>
 #include <SDL.h>
-#include "sdl_sdk_game.h"
+#include "game_manager.h"
 
 int main(int argc, char* argv[]){
 
 	argc = 0;
 	argv = nullptr;
 
-	Game game;
-	return game.run();
+	GameManager::instance().run();
+
+	return 0;
 
 }

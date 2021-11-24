@@ -99,8 +99,16 @@ inline Matix4x4 Matix4x4::GetTransform(const Vector3& translate,
 }
 
 inline Matix4x4 Matix4x4::GetTransform(float trans_x, float trans_y, float trans_z,
-	float scale_x, float scale_y, float scale_Z,
+	float scale_x, float scale_y, float scale_z,
 	float rotateX, float rotateY, float rotateZ)  {
+
+	Matrix4x4 result;
+	Matrix4x4 translation;
+	Matrix4x4 scalation;
+	Matrix4x4 rotation;
+
+	rotation = rotation.RotateX(rotateX).Multiply(rotation.RotateY(rotateY).Multiply(rotation.RotateZ(rotateZ)));
+	result = translation.Translate(trans_x, trans_y, trans_z).Multiply(rotation.Multiply(scalation.Scale(scale_x, scale_y, scale_z)));
 	
 	return Matix4x4();
 }
