@@ -209,7 +209,6 @@ inline Vector4 Vector4::Normalized() const {
 inline void Vector4::Scale(Vector4 scale) {	
 	Vector4(this->x * scale.x, this->y * scale.y, 
 					this->z * scale.z, this->w * scale.w);
-
 }
 
 inline float Vector4::SqrMagnitude() const {

@@ -202,7 +202,7 @@ inline float Vector3::SqrMagnitude() const {
 }
 
 inline void Vector3::Scale(const Vector3& other) {	
-
+	Vector3(this->x * other.x, this->y * other.y, this->z * other.z);
 }
 
 inline void Vector3::Normalize() {	
@@ -246,10 +246,8 @@ inline Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float 
 }
 
 inline Vector3 Vector3::Reflect(const Vector3& direction, const Vector3& normal) {
-	// normal.Normalize();
-	Vector3 result;
-	// result = (direction - 2.0f * DotProduct(direction , normal) * normal)
-	return result;
+
+	return Vector3();
 }
 
 #endif // __VECTOR3_H__

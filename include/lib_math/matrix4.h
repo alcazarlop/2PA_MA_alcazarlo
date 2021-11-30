@@ -4,6 +4,7 @@
 #include "vector3.h"
 #include "vector4.h"
 #include "matrix3.h"
+#include <math.h>
 
 class Matix4x4{
 	
@@ -94,14 +95,37 @@ inline Matix4x4::Matix4x4(const Matix4x4& copy) {
 inline Matix4x4::~Matix4x4() {}
 
 inline Matix4x4 Matix4x4::Identity() const {
-
-
-  return Matix4x4();
+  float array[16] = { 1.0f, 0.0f, 0.0f, 0.0f,
+                      0.0f, 1.0f, 0.0f, 0.0f,
+                      0.0f, 0.0f, 0.0f, 1.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
 
-  return Matix4x4();
+  Matix4x4 result;
+
+  result.m[0] = this->m[0] * other.m[0] + this->m[1] * other.m[4] + this->m[2] * other.m[8] + this->m[3] * other.m[12];
+  result.m[1] = this->m[0] * other.m[1] + this->m[1] * other.m[5] + this->m[2] * other.m[9] + this->m[3] * other.m[13];
+  result.m[2] = this->m[0] * other.m[2] + this->m[1] * other.m[6] + this->m[2] * other.m[10] + this->m[3] * other.m[14];
+  result.m[3] = this->m[0] * other.m[3] + this->m[1] * other.m[7] + this->m[2] * other.m[11] + this->m[3] * other.m[15];
+
+  result.m[4] = this->m[4] * other.m[0] + this->m[5] * other.m[4] + this->m[6] * other.m[8] + this->m[7] * other.m[12];
+  result.m[5] = this->m[4] * other.m[1] + this->m[5] * other.m[5] + this->m[6] * other.m[9] + this->m[7] * other.m[13];
+  result.m[6] = this->m[4] * other.m[2] + this->m[5] * other.m[6] + this->m[6] * other.m[10] + this->m[7] * other.m[14];
+  result.m[7] = this->m[4] * other.m[3] + this->m[5] * other.m[7] + this->m[6] * other.m[11] + this->m[7] * other.m[15];
+
+  result.m[8] = this->m[8] * other.m[0] + this->m[9] * other.m[4] + this->m[10] * other.m[8] + this->m[11] * other.m[12];
+  result.m[9] = this->m[8] * other.m[1] + this->m[9] * other.m[5] + this->m[10] * other.m[9] + this->m[11] * other.m[13];
+  result.m[10] = this->m[8] * other.m[2] + this->m[9] * other.m[6] + this->m[10] * other.m[10] + this->m[11] * other.m[14];
+  result.m[11] = this->m[8] * other.m[3] + this->m[9] * other.m[7] + this->m[10] * other.m[11] + this->m[11] * other.m[15];
+
+  result.m[12] = this->m[12] * other.m[0] + this->m[13] * other.m[4] + this->m[14] * other.m[8] + this->m[15] * other.m[12];
+  result.m[13] = this->m[12] * other.m[1] + this->m[13] * other.m[5] + this->m[14] * other.m[9] + this->m[15] * other.m[13];
+  result.m[14] = this->m[12] * other.m[2] + this->m[13] * other.m[6] + this->m[14] * other.m[10] + this->m[15] * other.m[14];
+  result.m[15] = this->m[12] * other.m[3] + this->m[13] * other.m[7] + this->m[14] * other.m[11] + this->m[15] * other.m[15];
+
+  return result;
 }
 
 
@@ -132,44 +156,66 @@ inline Matix4x4 Matix4x4::Transpose() const {
 }
 
 inline Matix4x4 Matix4x4::Translate(const Vector3& distance){
-  
-  return Matix4x4();
+  float array[16] = { 1.0f, 0.0f, 0.0f, 0.0f,
+                      0.0f, 1.0f, 0.0f, 0.0f,
+                      0.0f, 0.0f, 1.0f, 0.0f,
+                      distance.x, distance.y, distance.z ,1.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::Translate(float x, float y, float z){
-  
-  return Matix4x4();
+  float array[16] = { 1.0f, 0.0f, 0.0f, 0.0f,
+                      0.0f, 1.0f, 0.0f, 0.0f,
+                      0.0f, 0.0f, 1.0f, 0.0f,
+                      x, y, z, 1.0f         };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::Scale(const Vector3& scale){
-  
-  return Matix4x4();
+  float array[16] = { scale.x, 0.0f, 0.0f, 0.0f,
+                    0.0f, scale.y, 0.0f, 0.0f,
+                    0.0f, 0.0f, scale.z, 0.0f,
+                    0.0f, 0.0f, 0.0f ,0.0f    };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::Scale(float x, float y, float z){
-  
-  return Matix4x4();
+ float array[16] = { x, 0.0f, 0.0f, 0.0f,
+                    0.0f, y, 0.0f, 0.0f,
+                    0.0f, 0.0f, z, 0.0f,
+                    0.0f, 0.0f, 0.0f ,0.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::RotateX(float radians){
-  
-  return Matix4x4();
+  float array[16] = { 1.0f, 0.0f, 0.0f, 0.0f,
+                      0.0f, cosf(radians), sinf(radians), 0.0f,
+                      0.0f, -sinf(radians), cosf(radians), 0.0f,
+                      0.0f, 0.0f, 0.0f, 1.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::RotateY(float radians){
-  
-  return Matix4x4();
+  float array[16] = { cosf(radians), 0.0f, -sinf(radians), 0.0f,
+                      0.0f, 1.0f, 0.0f, 0.0f,
+                      sinf(radians), 0.0f, cosf(radians), 0.0f,
+                      0.0f, 0.0f, 0.0f, 1.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::RotateZ(float radians) {
-  
-  return Matix4x4();
+  float array[16] = { cosf(radians), sinf(radians), 0.0f, 0.0f,
+                      -sinf(radians), cosf(radians), 0.0f ,0.0f, 
+                      0.0f, 0.0f, 1.0f, 0.0f,
+                      0.0f, 0.0f, 0.0f, 1.0f };
+  return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::GetTransform(const Vector3& translate,
                 const Vector3& scale,
                 float rotateX, float rotateY,
                 float rotateZ)   {
+
   return Matix4x4();
 }
 
@@ -189,11 +235,11 @@ inline Matix4x4 Matix4x4::GetTransform(float trans_x, float trans_y, float trans
 }
 
 inline Vector4 Matix4x4::GetColum(int colum) const {
-  return Vector4(m[colum], m[colum + 4], m[colum + 8], m[colum + 12]);
+  return Vector4();
 }
 
 inline Vector4 Matix4x4::GetLine(int line) const {
-  return Vector4(m[line], m[line + 1], m[line + 2], m[line + 3]);
+  return Vector4();
 }
 
 inline Matix4x4 Matix4x4::PerspectiveMatrix(float fov, float aspect,
@@ -233,7 +279,6 @@ inline Matix4x4& Matix4x4::operator+=(float value) {
     m[i] += value;
   return *this; 
 }
-
 
 inline Matix4x4 Matix4x4::operator-(const Matix4x4& other) const  {
   Matix4x4 result(*this);

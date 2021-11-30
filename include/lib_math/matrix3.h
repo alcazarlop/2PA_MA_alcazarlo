@@ -170,12 +170,10 @@ inline void Matrix3x3::operator=(const Matrix3x3& other) {
 }
 
 inline Matrix3x3 Matrix3x3::Identity(){
-	// for(int i = 0; i < 3; ++i)
-	// 	for(int j = 0; j < 3; ++j)
-	// 		if(j == i)
-	// 			m[(j + i + 2)] = 1.0f;
-
-	return Matrix3x3();
+	float array[9] = { 	1.0f, 0.0f, 0.0f,
+											0.0f, 1.0f, 0.0f,
+											0.0f, 0.0f, 1.0f };
+	return Matrix3x3(array);
 }
 
 inline float Matrix3x3::Determinant() const {
@@ -191,16 +189,38 @@ inline bool Matrix3x3::Inverse() {
 }
 
 inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {	
-	return Matrix3x3();
+	float array[9] = {	1.0f, 0.0f, 0.0f,
+											0.0f, 1.0f, 0.0f,
+											mov_vector.x, mov_vector.y, 1.0f };
+	return Matrix3x3(array);
 }
 
 inline Matrix3x3 Matrix3x3::Translate(float x, float y) {
-	return Matrix3x3();
+	float array[9] = {	1.0f, 0.0f, 0.0f,
+											0.0f, 1.0f, 0.0f,
+											x, y, 1.0f };
+	return Matrix3x3(array);
 }
 
 inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
-	return Matrix3x3();
+	
+	Matrix3x3 result;
+	
+	result.m[0] = this->m[0] * other.m[0] + this->m[1] * other.m[3] + this->m[2] * other.m[6];
+	result.m[1] = this->m[0] * other.m[1] + this->m[1] * other.m[4] + this->m[2] * other.m[7];
+	result.m[2] = this->m[0] * other.m[2] + this->m[1] * other.m[5] + this->m[2] * other.m[8];
+	
+	result.m[3] = this->m[3] * other.m[0] + this->m[4] * other.m[3] + this->m[5] * other.m[6];
+	result.m[4] = this->m[3] * other.m[1] + this->m[4] * other.m[4] + this->m[5] * other.m[7];
+	result.m[5] = this->m[3] * other.m[2] + this->m[4] * other.m[5] + this->m[5] * other.m[8];
+
+	result.m[6] = this->m[6] * other.m[0] + this->m[7] * other.m[3] + this->m[8] * other.m[6];
+	result.m[7] = this->m[6] * other.m[1] + this->m[7] * other.m[4] + this->m[8] * other.m[7];
+	result.m[8] = this->m[6] * other.m[2] + this->m[7] * other.m[5] + this->m[8] * other.m[8];
+	
+	return result;
 }
+
 
 inline Matrix3x3 Matrix3x3::Adjoint() const {
 	return Matrix3x3();
@@ -211,11 +231,11 @@ inline Matrix3x3 Matrix3x3::Transpose() const {
 }
 
 inline Vector3 Matrix3x3::GetColum(int colum) const {
-	return Vector3(m[colum], m[colum + 3], m[colum + 6]);
+	return Vector3();
 }
 
 inline Vector3 Matrix3x3::GetLine(int line) const {
-	return Vector3(m[line], m[line + 1], m[line + 2]);
+	return Vector3();
 }
 
 #endif 
