@@ -55,25 +55,35 @@ class Matrix3x3 {
 
 inline Matrix3x3::Matrix3x3() {
 	for(int i = 0; i < 9; ++i)
-		m[i] = 0.0f;
+		this->m[i] = 0.0f;
 }
 inline Matrix3x3::Matrix3x3(float value) {
 	for(int i = 0; i < 9; ++i)
-		m[i] = value;
+		this->m[i] = value;
 }
 
 inline Matrix3x3::Matrix3x3(float *values_array) {
 	for(int i = 0; i < 9; ++i)
-		m[i] = values_array[i];
+		this->m[i] = values_array[i];
 }
 
 inline Matrix3x3::Matrix3x3(Vector3 a, Vector3 b, Vector3 c) {
-
+	this->m[0] = a.x;
+	this->m[1] = a.y;
+	this->m[2] = a.z;
+	
+	this->m[3] = b.x;
+	this->m[4] = b.y;
+	this->m[5] = b.z;
+	
+	this->m[6] = c.x;
+	this->m[7] = c.y;
+	this->m[8] = c.z;
 }
 
 inline Matrix3x3::Matrix3x3(const Matrix3x3& copy) {
 	for(int i = 0; i < 9; ++i)
-		m[i] = copy.m[i];
+		this->m[i] = copy.m[i];
 }
 
 inline Matrix3x3::~Matrix3x3() {}
@@ -166,10 +176,16 @@ inline bool Matrix3x3::operator==(const Matrix3x3& other) const {
 }
 
 inline bool Matrix3x3::operator!=(const Matrix3x3& other) const {
-	return true;
+	bool equal = true;
+  for(int i = 0; i < 9 && equal; ++i)
+    equal &= (m[i] == other.m[i]);
+  return equal;
 }
 
 inline void Matrix3x3::operator=(const Matrix3x3& other) {
+	for(int i = 0; i < 9; ++i)
+		this->m[i] = other.m[i];
+	Matrix3x3(*this);
 }
 
 inline Matrix3x3 Matrix3x3::Identity(){
@@ -180,7 +196,13 @@ inline Matrix3x3 Matrix3x3::Identity(){
 }
 
 inline float Matrix3x3::Determinant() const {
-	return 0.0f;
+	//Sarrus
+	return (	this->m[0] * this->m[4] * this->m[8] 
+					+	this->m[3] * this->m[7] * this->m[2]
+					+ this->m[1] * this->m[5] * this->m[6]
+					- this->m[6] * this->m[4] * this->m[2]
+					- this->m[0] * this->m[5] * this->m[7]
+					- this->m[1] * this->m[3] * this->m[8]);
 }
 
 inline bool Matrix3x3::GetInverse(Matrix3x3& out) const {
@@ -198,16 +220,16 @@ inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {
 	return Matrix3x3(array);
 }
 
-inline Matrix3x3 Matrix3x3::Translate(float x, float y) {
-	float array[9] = {	1.0f, 0.0f, 0.0f,
-											0.0f, 1.0f, 0.0f,
-											x, y, 1.0f };
+inline Matrix3x3 Matrix3x3::Translate(float x, float y) { //TODO ¿esta por filas pero funciona?
+	float array[9] = {	1.0f, 0.0f, x,
+											0.0f, 1.0f, y,
+											0.0f,	0.0f, 1.0f };
 	return Matrix3x3(array);
 }
 
 inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
 	
-	Matrix3x3 result(0.0f,0.0f,0.0f);
+	Matrix3x3 result;
 	
 	result.m[0] = this->m[0] * other.m[0] + this->m[1] * other.m[3] + this->m[2] * other.m[6];
 	result.m[1] = this->m[0] * other.m[1] + this->m[1] * other.m[4] + this->m[2] * other.m[7];
@@ -226,13 +248,14 @@ inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
 
 
 inline Matrix3x3 Matrix3x3::Adjoint() const {
+	
 	return Matrix3x3();
 }
 
 inline Matrix3x3 Matrix3x3::Transpose() const {
-float array[9] = {  this->m[0], this->m[1], this->m[2],
-										this->m[3], this->m[4], this->m[5],
-										this->m[6], this->m[7], this->m[8] };
+	float array[9] = {  this->m[0], this->m[3], this->m[6],
+											this->m[1], this->m[4], this->m[7],
+											this->m[2], this->m[5], this->m[8] };
 	return Matrix3x3(array);
 }
 
@@ -241,7 +264,7 @@ inline Vector3 Matrix3x3::GetColum(int colum) const {
 }
 
 inline Vector3 Matrix3x3::GetLine(int line) const {
-	return Vector3();
+	return Vector3(m[line * 3], m[line * 3 + 1], m[line * 3 + 2]);
 }
 
 #endif 

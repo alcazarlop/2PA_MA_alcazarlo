@@ -226,7 +226,7 @@ inline float Vector3::Distance(const Vector3& a, const Vector3& b) {
 }
 
 inline float Vector3::Angle(const Vector3& a, const Vector3& b)  {
-	return acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
+	return acosf(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
 }
 
 inline Vector3 Vector3::CrossProduct(const Vector3& a, const Vector3& b)  {

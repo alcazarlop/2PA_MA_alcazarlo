@@ -74,7 +74,7 @@ class Matix4x4{
 
 inline Matix4x4::Matix4x4() {
   for(int i = 0; i < 16; ++i)
-    m[i] = 0.0f;
+    this->m[i] = 0.0f;
 }
 
 inline Matix4x4::Matix4x4(float array[16]) {
@@ -84,12 +84,12 @@ inline Matix4x4::Matix4x4(float array[16]) {
 
 inline Matix4x4::Matix4x4(float value) {
   for(int i = 0; i < 16; ++i)
-    m[i] = value;
+    this->m[i] = value;
 }
 
 inline Matix4x4::Matix4x4(const Matix4x4& copy) {
   for(int i = 0; i < 16; ++i)
-    m[i] = copy.m[i];
+    this->m[i] = copy.m[i];
 }
 
 inline Matix4x4::~Matix4x4() {}
@@ -152,10 +152,10 @@ inline bool Matix4x4::GetInverse(Matix4x4* out) const {
 }
 
 inline Matix4x4 Matix4x4::Transpose() const {
-  float array[16] = { this->m[0], this->m[1], this->m[2], this->m[3],
-                      this->m[4], this->m[5], this->m[6], this->m[7],
-                      this->m[8], this->m[9], this->m[10], this->m[11],
-                      this->m[12], this->m[13], this->m[14], this->m[15] };
+  float array[16] = { this->m[0], this->m[4], this->m[8], this->m[12],
+                      this->m[1], this->m[5], this->m[9], this->m[13],
+                      this->m[2], this->m[6], this->m[10], this->m[14],
+                      this->m[3], this->m[7], this->m[11], this->m[15] };
   return Matix4x4(array);
 }
 
@@ -239,11 +239,11 @@ inline Matix4x4 Matix4x4::GetTransform(float trans_x, float trans_y, float trans
 }
 
 inline Vector4 Matix4x4::GetColum(int colum) const {
-  return Vector4();
+  return Vector4(m[colum], m[colum + 4], m[colum + 8], m[colum + 12]);
 }
 
 inline Vector4 Matix4x4::GetLine(int line) const {
-  return Vector4();
+  return Vector4(m[line * 4], m[line * 4 + 1], m[line * 4 + 2], m[line * 4 + 3]);
 }
 
 inline Matix4x4 Matix4x4::PerspectiveMatrix(float fov, float aspect,

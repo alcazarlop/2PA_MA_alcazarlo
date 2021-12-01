@@ -34,7 +34,7 @@ class Matrix2x2 {
 	float Determinant() const;
 
 	Vector2 GetLine(int line) const;
-	Vector2 GetColum(int line) const;
+	Vector2 GetColum(int colum) const;
 
 	Matrix2x2 Identity() const;
 	Matrix2x2 Multiply(const Matrix2x2& other) const;
@@ -47,24 +47,18 @@ class Matrix2x2 {
 };
 
 inline Matrix2x2::Matrix2x2() {
-	m[0] = 0; 
-	m[1] = 0;
-	m[2] = 0;
-	m[3] = 0;
+	for(int i = 0; i < 4; ++i)
+		this->m[i] = 0.0f;
 }
 
 inline Matrix2x2::Matrix2x2(float a[4]) {
-	m[0] = a[0];
-	m[1] = a[1];
-	m[2] = a[2];
-	m[3] = a[3];
+	for(int i = 0; i < 4; ++i)
+		this->m[i] = a[i];
 }
 
 inline Matrix2x2::Matrix2x2(float a) {
-	m[0] = a;
-	m[1] = a;
-	m[2] = a;
-	m[3] = a;
+	for(int i = 0; i < 4; ++i)
+		this->m[i] = a;
 }
 
 inline Matrix2x2::Matrix2x2(const Vector2& a, const Vector2& b) {
@@ -75,80 +69,116 @@ inline Matrix2x2::Matrix2x2(const Vector2& a, const Vector2& b) {
 }
 
 inline Matrix2x2::Matrix2x2(const Matrix2x2& copy) {
-	m[0] = copy[0];
-	m[1] = copy[1];
-	m[2] = copy[2];
-	m[3] = copy[3];
+	for(int i = 0; i < 4; ++i)
+		m[i] = copy.m[i];
 }
 
 inline Matrix2x2::~Matrix2x2() { }
 
 inline Matrix2x2 Matrix2x2::operator+(const Matrix2x2& other) const {
-	return Matrix2x2();
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result->m[i] += other.m[i];
+	return result;
 }
 
 inline void Matrix2x2::operator+=(const Matrix2x2& other) {
+	for(int i = 0; i < 4; ++i)
+		this->m[i] += other.m[i];
 }
 
 inline Matrix2x2 Matrix2x2::operator+(float value) const {
-	return Matrix2x2();
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result.m[i] += value;
+	return result;
 }
 
 inline void Matrix2x2::operator+=(float value) {
+	for(int i = 0; i < 4; ++i)
+		this->m[i] += value;
 }
 
 inline Matrix2x2 Matrix2x2::operator-(const Matrix2x2& other) const {
-	return Matrix2x2();
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result.m[i] -= other.m[i];
+	return result;
 }
 
 inline void Matrix2x2::operator-=(const Matrix2x2& other) {
+	for(int i = 0; i < 4; ++i)
+		this->m[i] -= other.m[i];
 }
 
 inline Matrix2x2 Matrix2x2::operator-(float value) const {	
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result.m[i] -= value;
 	return Matrix2x2();
 }
 
 inline void Matrix2x2::operator-=(float value) {
+	for(int i = 0; i < 4; ++i)
+		this->m[i] -= value;
 }
 
-
 inline Matrix2x2 Matrix2x2::operator*(float value) const {
-	return Matrix2x2();
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result.m[i] *= value;
+	return result;
 }
 
 inline void Matrix2x2::operator*=(float value) {
-
-
-
+	for(int i = 0; i < 4; ++i)
+		this->m[i] *= value;
 }
 
 inline Matrix2x2 Matrix2x2::operator/(float value) const {
+	value = 1.0f / value;
+	Matrix2x2 result(*this);
+	for(int i = 0; i < 4; ++i)
+		result.m[i] *= value;
 	return Matrix2x2();
 }
 
 inline void Matrix2x2::operator/=(float value) {
+	value = 1.0f / value;
+	for(int i = 0; i < 4; ++i)
+		this->m[i] *= value;
 }
 
-
 inline bool Matrix2x2::operator==(const Matrix2x2& other) const {
-	return true;
+	bool equal = true;
+	for(int i = 0; i < 4 && equal; ++i)
+		equal &= (this->m[i] != other.m[i]);
+	return equal;
 }
 
 inline bool Matrix2x2::operator!=(const Matrix2x2& other) const {
-	return true;
+	bool equal = true;
+	for(int i = 0; i < 4 && equal; ++i)
+		equal &= (this->m[i] == other.m[i]);
+	return equal;
 }
 
 inline void Matrix2x2::operator=(const Matrix2x2& other) {
+	for(int i = 0; i < 4; ++i)
+		this->m[i] = other.m[i];
 }
 
 inline Matrix2x2 Matrix2x2::Identity() const {
-	return Matrix2x2();
+	float array[4] = { 	1.0f, 0.0f,
+											0.0f, 1.0f };
+	return Matrix2x2(array);
 }
 
 inline float Matrix2x2::Determinant() const {
-	return 0.0f;
+	return (this->m[0] * this->m[3] - this->m[1] * this->m[2]);
 }
 
+// inv = 1 / det * adj?
 inline Matrix2x2 Matrix2x2::Inverse() const {
 	return Matrix2x2();
 }
@@ -165,20 +195,23 @@ inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
 	return result;
 }
 
-inline Matrix2x2 Matrix2x2::Adjoint() const {
+//TODO determiante * -1 quizas?
+inline Matrix2x2 Matrix2x2::Adjoint() const { 
 	return Matrix2x2();
 }
 
 inline Matrix2x2 Matrix2x2::Transpose() const {
-	return Matrix2x2();
+	float array[4] = {	this->m[0], this->m[1],
+											this->m[2], this->m[3] 	};
+	return Matrix2x2(array);
 }
 
 inline Vector2 Matrix2x2::GetLine(int line) const {
-	return Vector2();
+	return Vector2(m[line], m[line + 2]);
 }
 
-inline Vector2 Matrix2x2::GetColum(int line) const {	
-	return Vector2();
+inline Vector2 Matrix2x2::GetColum(int colum) const {	
+	return Vector2(m[colum * 2], m[colum * 2 + 1]);
 }
 
 #endif
