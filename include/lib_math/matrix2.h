@@ -78,7 +78,7 @@ inline Matrix2x2::~Matrix2x2() { }
 inline Matrix2x2 Matrix2x2::operator+(const Matrix2x2& other) const {
 	Matrix2x2 result(*this);
 	for(int i = 0; i < 4; ++i)
-		result->m[i] += other.m[i];
+		result.m[i] += other.m[i];
 	return result;
 }
 
@@ -187,15 +187,15 @@ inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
 
 	Matrix2x2 result;
 
-	result.m[0] = this.m[0] * other.m[0] + this.m[2] * other.m[1];
-	result.m[1] = this.m[1] * other.m[0] + this.m[3] * other.m[1];
-	result.m[2] = this.m[2] * other.m[0] + this.m[2] * other.m[3];
-	result.m[3] = this.m[1] * other.m[2] + this.m[3] * other.m[3];
+	result.m[0] = this->m[0] * other.m[0] + this->m[2] * other.m[1];
+	result.m[1] = this->m[1] * other.m[0] + this->m[3] * other.m[1];
+	result.m[2] = this->m[2] * other.m[0] + this->m[2] * other.m[3];
+	result.m[3] = this->m[1] * other.m[2] + this->m[3] * other.m[3];
 
 	return result;
 }
 
-//TODO determiante * -1 quizas?
+//TODO determiante * -1 quizas? o adj / det ?
 inline Matrix2x2 Matrix2x2::Adjoint() const { 
 	return Matrix2x2();
 }

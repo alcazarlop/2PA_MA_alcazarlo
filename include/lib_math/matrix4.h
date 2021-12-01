@@ -132,14 +132,99 @@ inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
 
 inline float Matix4x4::Determinant() const {
   
-  return 0.0f;
+  float det_0[9] = { this->m[5], this->m[9], this->m[13],
+                     this->m[6], this->m[10], this->m[14],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_1[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[6], this->m[10], this->m[14],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_2[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[5], this->m[9], this->m[13],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_3[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[5], this->m[9], this->m[13],
+                     this->m[6], this->m[10], this->m[14] };
+
+  return (  this->m[0] * Matrix3x3(det_0).Determinant() - this->m[1] * Matrix3x3(det_1).Determinant() 
+          + this->m[2] * Matrix3x3(det_2).Determinant() - this->m[3] * Matrix3x3(det_3).Determinant());
 }
 
 
 inline Matix4x4 Matix4x4::Adjoint() const {
   
-  Matix4x4 result;
-  return result;
+  float det_0[9] = { this->m[5], this->m[9], this->m[13],
+                     this->m[6], this->m[10], this->m[14],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_1[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[6], this->m[10], this->m[14],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_2[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[5], this->m[9], this->m[13],
+                     this->m[7], this->m[11], this->m[15] };
+
+  float det_3[9] = { this->m[4], this->m[8], this->m[12],
+                     this->m[5], this->m[9], this->m[13],
+                     this->m[6], this->m[10], this->m[14] };
+
+  float det_4[9] = { this->m[1], this->m[9], this->m[13],
+                     this->m[2], this->m[10], this->m[14],
+                     this->m[3], this->m[11], this->m[15] };
+
+  float det_5[9] = { this->m[0], this->m[8], this->m[12],
+                     this->m[2], this->m[10], this->m[14],
+                     this->m[3], this->m[11], this->m[15] };
+
+  float det_6[9] = { this->m[0], this->m[8], this->m[12],
+                     this->m[1], this->m[9], this->m[13],
+                     this->m[3], this->m[11], this->m[15] };
+
+  float det_7[9] = { this->m[0], this->m[8], this->m[12],
+                     this->m[1], this->m[9], this->m[13],
+                     this->m[2], this->m[10], this->m[14] };  
+
+  float det_8[9] = { this->m[1], this->m[5], this->m[13],
+                     this->m[2], this->m[6], this->m[14],
+                     this->m[3], this->m[7], this->m[15] };
+
+  float det_9[9] = { this->m[0], this->m[4], this->m[12],
+                     this->m[2], this->m[6], this->m[14],
+                     this->m[3], this->m[7], this->m[15] };
+
+  float det_10[9] = { this->m[0], this->m[4], this->m[12],
+                     this->m[1], this->m[5], this->m[13],
+                     this->m[3], this->m[7], this->m[15] };
+
+  float det_11[9] = { this->m[0], this->m[4], this->m[12],
+                     this->m[1], this->m[5], this->m[13],
+                     this->m[2], this->m[6], this->m[14] };  
+
+  float det_12[9] = { this->m[1], this->m[5], this->m[9],
+                     this->m[2], this->m[6], this->m[10],
+                     this->m[3], this->m[7], this->m[11] };
+
+  float det_13[9] = { this->m[0], this->m[4], this->m[8],
+                     this->m[2], this->m[6], this->m[10],
+                     this->m[3], this->m[7], this->m[11] };
+
+  float det_14[9] = { this->m[0], this->m[4], this->m[8],
+                     this->m[1], this->m[5], this->m[9],
+                     this->m[3], this->m[7], this->m[11] };
+
+  float det_15[9] = { this->m[0], this->m[4], this->m[8],
+                     this->m[1], this->m[5], this->m[9],
+                     this->m[2], this->m[6], this->m[10] };
+
+  float array[16] = { Matrix3x3(det_0).Determinant(), -Matrix3x3(det_4).Determinant(), Matrix3x3(det_8).Determinant(), -Matrix3x3(det_12).Determinant(),
+                      -Matrix3x3(det_1).Determinant(), Matrix3x3(det_5).Determinant(), -Matrix3x3(det_9).Determinant(), Matrix3x3(det_13).Determinant(),
+                      Matrix3x3(det_2).Determinant(), -Matrix3x3(det_6).Determinant(), Matrix3x3(det_10).Determinant(), -Matrix3x3(det_14).Determinant(),
+                      -Matrix3x3(det_3).Determinant(), Matrix3x3(det_7).Determinant(),- Matrix3x3(det_11).Determinant(), Matrix3x3(det_15).Determinant() };  
+
+  return Matix4x4(array).Transpose();
 }
 
 inline bool Matix4x4::Inverse() {
@@ -193,23 +278,23 @@ inline Matix4x4 Matix4x4::Scale(float x, float y, float z){
 
 inline Matix4x4 Matix4x4::RotateX(float radians){
   float array[16] = { 1.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, cosf(radians), sinf(radians), 0.0f,
-                      0.0f, -sinf(radians), cosf(radians), 0.0f,
+                      0.0f, cosf(radians), -sinf(radians), 0.0f,
+                      0.0f, sinf(radians), cosf(radians), 0.0f,
                       0.0f, 0.0f, 0.0f, 1.0f };
   return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::RotateY(float radians){
-  float array[16] = { cosf(radians), 0.0f, -sinf(radians), 0.0f,
+  float array[16] = { cosf(radians), 0.0f, sinf(radians), 0.0f,
                       0.0f, 1.0f, 0.0f, 0.0f,
-                      sinf(radians), 0.0f, cosf(radians), 0.0f,
+                      -sinf(radians), 0.0f, cosf(radians), 0.0f,
                       0.0f, 0.0f, 0.0f, 1.0f };
   return Matix4x4(array);
 }
 
 inline Matix4x4 Matix4x4::RotateZ(float radians) {
-  float array[16] = { cosf(radians), sinf(radians), 0.0f, 0.0f,
-                      -sinf(radians), cosf(radians), 0.0f ,0.0f, 
+  float array[16] = { cosf(radians), -sinf(radians), 0.0f, 0.0f,
+                      sinf(radians), cosf(radians), 0.0f ,0.0f, 
                       0.0f, 0.0f, 1.0f, 0.0f,
                       0.0f, 0.0f, 0.0f, 1.0f };
   return Matix4x4(array);
@@ -366,6 +451,5 @@ inline void Matix4x4::operator=(const Matix4x4& other) {
     this->m[i] = other.m[i];
   Matix4x4(*this);
 }
-
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "vector2.h"
 #include "vector3.h"
+#include "matrix2.h"
 
 class Matrix3x3 {
 
@@ -249,7 +250,23 @@ inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
 
 inline Matrix3x3 Matrix3x3::Adjoint() const {
 	
-	return Matrix3x3();
+	float det_0[4] = { this->m[4], this->m[5], this->m[7], this->m[8] };
+	float det_1[4] = { this->m[3], this->m[5], this->m[6], this->m[8] };
+	float det_2[4] = { this->m[3], this->m[4], this->m[6], this->m[7] };
+
+	float det_3[4] = { this->m[1], this->m[2], this->m[7], this->m[8] };
+	float det_4[4] = { this->m[0], this->m[2], this->m[6], this->m[8] };
+	float det_5[4] = { this->m[0], this->m[1], this->m[6], this->m[7] };
+
+	float det_6[4] = { this->m[1], this->m[2], this->m[4], this->m[5] };
+	float det_7[4] = { this->m[0], this->m[2], this->m[3], this->m[5] };
+	float det_8[4] = { this->m[0], this->m[1], this->m[3], this->m[4] };
+
+	float array[9] = { Matrix2x2(det_0).Determinant(), -Matrix2x2(det_3).Determinant(), Matrix2x2(det_6).Determinant(),
+										 -Matrix2x2(det_1).Determinant(), Matrix2x2(det_4).Determinant(), -Matrix2x2(det_7).Determinant(),
+										 Matrix2x2(det_2).Determinant(), -Matrix2x2(det_5).Determinant(), Matrix2x2(det_8).Determinant() };
+
+	return Matrix3x3(array).Transpose();
 }
 
 inline Matrix3x3 Matrix3x3::Transpose() const {
