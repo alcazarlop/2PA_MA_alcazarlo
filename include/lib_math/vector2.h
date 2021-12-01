@@ -175,7 +175,7 @@ inline float Vector2::SqrMagnitude() const {
 }
 
 inline void Vector2::Scale(const Vector2 scale){
-	Vector2( this->x * scale.x, this->y * scale.y );
+	Vector2( this->x *= scale.x, this->y *= scale.y );
 }
 
 inline void Vector2::Normalize() { 

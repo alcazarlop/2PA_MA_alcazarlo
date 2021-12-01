@@ -31,7 +31,7 @@ class Vector3 {
 
  	bool operator==(const Vector3& other) const;
  	bool operator!=(const Vector3& other) const;
- 	void operator=(const Vector3& other) const;
+ 	void operator=(const Vector3& other);
  	void operator=(float value);
 
  	float Magnitude() const;
@@ -185,8 +185,8 @@ inline bool Vector3::operator!=(const Vector3& other) const {
 	return (this->x != other.x || this->y != other.y || this->z != other.z);
 }
 
-inline void Vector3::operator=(const Vector3& other) const {	
-	Vector3(other.x, other.y, other.z);
+inline void Vector3::operator=(const Vector3& other) {	
+	Vector3(this->x = other.x, this->y = other.y, this->z = other.z);
 }
 
 inline void Vector3::operator=(float value) {	
@@ -202,7 +202,7 @@ inline float Vector3::SqrMagnitude() const {
 }
 
 inline void Vector3::Scale(const Vector3& other) {	
-	Vector3(this->x * other.x, this->y * other.y, this->z * other.z);
+	Vector3(this->x *= other.x, this->y *= other.y, this->z *= other.z);
 }
 
 inline void Vector3::Normalize() {	
@@ -226,8 +226,7 @@ inline float Vector3::Distance(const Vector3& a, const Vector3& b) {
 }
 
 inline float Vector3::Angle(const Vector3& a, const Vector3& b)  {
-	float result = DotProduct(a, b);
-	return result / (a.Magnitude() * b.Magnitude());
+	return acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
 }
 
 inline Vector3 Vector3::CrossProduct(const Vector3& a, const Vector3& b)  {
@@ -246,8 +245,11 @@ inline Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float 
 }
 
 inline Vector3 Vector3::Reflect(const Vector3& direction, const Vector3& normal) {
-
-	return Vector3();
+	normal.Normalized();
+	float dot = DotProduct(direction, normal);
+	return Vector3(direction.x - 2.0f * dot * normal.x,
+								 direction.y - 2.0f * dot * normal.y,
+								 direction.z - 2.0f * dot * normal.z);
 }
 
 #endif // __VECTOR3_H__
