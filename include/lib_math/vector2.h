@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include "math_utils.h"
+#include <stdint.h>
 
 class Vector2 {
 

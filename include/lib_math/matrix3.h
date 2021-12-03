@@ -4,6 +4,7 @@
 #include "vector2.h"
 #include "vector3.h"
 #include "matrix2.h"
+#include <stdio.h>
 
 class Matrix3x3 {
 
@@ -207,46 +208,52 @@ inline float Matrix3x3::Determinant() const {
 }
 
 inline bool Matrix3x3::GetInverse(Matrix3x3& out) const {
+
+
 	return true;
 }
 
 inline bool Matrix3x3::Inverse() {	
-	return true;
+	if(this->Determinant() != 0.0f){
+		*this = this->Adjoint() / this->Determinant();
+		return true;
+	}
+	return false;
 }
 
-inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {	
-	float array[9] = {	1.0f, 0.0f, 0.0f,
-											0.0f, 1.0f, 0.0f,
-											mov_vector.x, mov_vector.y, 1.0f };
-	return Matrix3x3(array);
-}
-
-inline Matrix3x3 Matrix3x3::Translate(float x, float y) { //TODO ¿esta por filas pero funciona?
-	float array[9] = {	1.0f, 0.0f, x,
-											0.0f, 1.0f, y,
-											0.0f,	0.0f, 1.0f };
-	return Matrix3x3(array);
-}
-
-inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
-	
+inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {
 	Matrix3x3 result;
-	
-	result.m[0] = this->m[0] * other.m[0] + this->m[1] * other.m[3] + this->m[2] * other.m[6];
-	result.m[1] = this->m[0] * other.m[1] + this->m[1] * other.m[4] + this->m[2] * other.m[7];
-	result.m[2] = this->m[0] * other.m[2] + this->m[1] * other.m[5] + this->m[2] * other.m[8];
-	
-	result.m[3] = this->m[3] * other.m[0] + this->m[4] * other.m[3] + this->m[5] * other.m[6];
-	result.m[4] = this->m[3] * other.m[1] + this->m[4] * other.m[4] + this->m[5] * other.m[7];
-	result.m[5] = this->m[3] * other.m[2] + this->m[4] * other.m[5] + this->m[5] * other.m[8];
-
-	result.m[6] = this->m[6] * other.m[0] + this->m[7] * other.m[3] + this->m[8] * other.m[6];
-	result.m[7] = this->m[6] * other.m[1] + this->m[7] * other.m[4] + this->m[8] * other.m[7];
-	result.m[8] = this->m[6] * other.m[2] + this->m[7] * other.m[5] + this->m[8] * other.m[8];
-	
+	result.Identity();
+	result.m[6] = mov_vector.x;
+	result.m[7] = mov_vector.y;
 	return result;
 }
 
+inline Matrix3x3 Matrix3x3::Translate(float x, float y) { //TODO ¿esta por filas pero funciona?
+	Matrix3x3 result;
+	result.Identity();
+	result.m[6] = x;
+	result.m[7] = y;
+	return result;
+}
+
+inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
+  Matrix3x3 result;
+  unsigned int file = 0, colum = 0;
+  for(int i = 0; i < 9; ++i){
+    float temp = 0.0f;
+    if(i % 3 == 0 && i != 0){ 
+      file++; 
+      colum = 0; 
+    }
+    for(int j = 0; j < 3; ++j){
+      temp += this->m[file * 3 + j] * other.m[j * 3 + colum];
+    }
+    colum++;
+    result.m[i] = temp;
+  }
+  return result;
+}
 
 inline Matrix3x3 Matrix3x3::Adjoint() const {
 	
