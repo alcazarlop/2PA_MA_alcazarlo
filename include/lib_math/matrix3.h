@@ -171,17 +171,17 @@ inline Matrix3x3& Matrix3x3::operator/=(float value) {
 }
 
 inline bool Matrix3x3::operator==(const Matrix3x3& other) const {
-	bool equal = true;
-  for(int i = 0; i < 9 && equal; ++i)
-    equal &= (m[i] != other.m[i]);
-  return equal;
+  for(int i = 0; i < 9; ++i)
+    if(m[i] != other.m[i])
+    	return false;
+  return true;
 }
 
 inline bool Matrix3x3::operator!=(const Matrix3x3& other) const {
-	bool equal = true;
-  for(int i = 0; i < 9 && equal; ++i)
-    equal &= (m[i] == other.m[i]);
-  return equal;
+  for(int i = 0; i < 9; ++i)
+    if(m[i] == other.m[i])
+  		return false;
+  return true;
 }
 
 inline void Matrix3x3::operator=(const Matrix3x3& other) {
@@ -208,9 +208,11 @@ inline float Matrix3x3::Determinant() const {
 }
 
 inline bool Matrix3x3::GetInverse(Matrix3x3& out) const {
-
-
-	return true;
+	if(this->Determinant() != 0.0f){
+		out = this->Adjoint() / this->Determinant();
+		return true;
+	}
+	return false;
 }
 
 inline bool Matrix3x3::Inverse() {	
@@ -225,15 +227,15 @@ inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {
 	Matrix3x3 result;
 	result.Identity();
 	result.m[6] = mov_vector.x;
-	result.m[7] = mov_vector.y;
+	result.m[7] = mov_vector.y; 
 	return result;
 }
 
-inline Matrix3x3 Matrix3x3::Translate(float x, float y) { //TODO ¿esta por filas pero funciona?
+inline Matrix3x3 Matrix3x3::Translate(float x, float y) { 
 	Matrix3x3 result;
 	result.Identity();
-	result.m[6] = x;
-	result.m[7] = y;
+	result.m[6] = x; 
+	result.m[7] = y; 
 	return result;
 }
 

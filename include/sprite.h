@@ -5,9 +5,10 @@
 #ifndef __SPRITE_H__
 #define __SPRITE_H__ 1
 
+// #include <SDL_image.h>
+#include <stdint.h>
 #include "entity.h"
 #include "texture.h"
-#include <stdint.h>
 
 class Sprite : public Entity {
  

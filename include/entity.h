@@ -19,9 +19,9 @@ class Entity {
  	virtual void init();
  	virtual  void init(int32_t tag, uint8_t enabled);
 
- 	virtual void set_position(const Vector2 pos) const;
- 	virtual void set_rotation(const float rot) const;
- 	virtual void set_scale(const Vector2 scale) const;
+ 	virtual void set_position(const Vector2& pos);
+ 	virtual void set_rotation(const float rot);
+ 	virtual void set_scale(const Vector2& scale);
 
  	virtual Vector2 position() const;
  	virtual float rotation() const;

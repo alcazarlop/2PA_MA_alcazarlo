@@ -227,8 +227,11 @@ inline bool Matix4x4::Inverse() {
 }
 
 inline bool Matix4x4::GetInverse(Matix4x4* out) const {
-
-  return true;
+ if(this->Determinant() != 0.0f){
+    *out = this->Adjoint() / this->Determinant();
+      return true;
+  }
+  return false;
 }
 
 inline Matix4x4 Matix4x4::Transpose() const {
@@ -303,22 +306,32 @@ inline Matix4x4 Matix4x4::GetTransform(const Vector3& translate,
                 float rotateX, float rotateY,
                 float rotateZ)   {
 
-  return Matix4x4();
+  Matix4x4 result = result.Identity();
+
+  Matix4x4 translation;
+  Matix4x4 scalation;
+  Matix4x4 rotation;
+
+  rotation = rotation.RotateX(rotateX).Multiply(rotation.RotateY(rotateY).Multiply(rotation.RotateZ(rotateZ)));
+  result = translation.Translate(translate.x, translate.y, translate.z).Multiply(rotation.Multiply(scalation.Scale(scale.x, scale.y, scale.z)));
+
+  return result;
 }
 
 inline Matix4x4 Matix4x4::GetTransform(float trans_x, float trans_y, float trans_z,
   float scale_x, float scale_y, float scale_z,
   float rotateX, float rotateY, float rotateZ)  {
 
-  // Matix4x4 result;
-  // Matix4x4 translation;
-  // Matix4x4 scalation;
-  // Matix4x4 rotation;
+  Matix4x4 result = result.Identity();
 
-  // rotation = rotation.RotateX(rotateX).Multiply(rotation.RotateY(rotateY).Multiply(rotation.RotateZ(rotateZ)));
-  // result = translation.Translate(trans_x, trans_y, trans_z).Multiply(rotation.Multiply(scalation.Scale(scale_x, scale_y, scale_z)));
+  Matix4x4 translation;
+  Matix4x4 scalation;
+  Matix4x4 rotation;
+
+  rotation = rotation.RotateX(rotateX).Multiply(rotation.RotateY(rotateY).Multiply(rotation.RotateZ(rotateZ)));
+  result = translation.Translate(trans_x, trans_y, trans_z).Multiply(rotation.Multiply(scalation.Scale(scale_x, scale_y, scale_z)));
   
-  return Matix4x4();
+  return result;
 }
 
 inline Vector4 Matix4x4::GetColum(int colum) const {
@@ -433,18 +446,18 @@ inline Matix4x4 Matix4x4::operator/(float value) const {
   return result;
 }
 
-inline bool Matix4x4::operator==(const Matix4x4& other) {
-  bool equal = true;
-  for(int i = 0; i < 16 && equal; ++i)
-    equal &= (m[i] != other.m[i]);
-  return equal;
+inline bool Matix4x4::operator==(const Matix4x4& other) {  
+  for(int i = 0; i < 16; ++i) 
+    if (m[i] != other.m[i]) 
+      return false;
+  return true;
 }
 
 inline bool Matix4x4::operator!=(const Matix4x4& other) {
-  bool equal = true;
-  for(int i = 0; i < 16 && equal; ++i)
-    equal &= (m[i] == other.m[i]);
-  return equal;
+  for(int i = 0; i < 16; ++i)
+    if(m[i] == other.m[i])
+      return false;
+  return true;
 }
 
 inline void Matix4x4::operator=(const Matix4x4& other) {

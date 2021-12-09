@@ -6,9 +6,9 @@ Entity::Entity(){
 	enabled_ = 1;
 }
 
-Entity::entity(int32_t tag, uint8_t enabled){
+Entity::Entity(int32_t tag, uint8_t enabled){
 	tag_ = tag;
-	enabled_ = enabled_;
+	enabled_ = enabled;
 }
 
 Entity::~Entity(){}
@@ -23,15 +23,15 @@ void Entity::init(int32_t tag, uint8_t enabled){
 	enabled_ = enabled;
 }
 
-void Entity::set_poisition(const Vector2 pos) const {
+void Entity::set_position(const Vector2& pos) {
 	position_ = pos;
 }
 
-void Entity::set_rotation(const float rot) const {
+void Entity::set_rotation(const float rot) {
 	rotation_ = rot;
 }
 
-void Entity::set_scale(const Vector2 scale) const {
+void Entity::set_scale(const Vector2& scale) {
 	scale_ = scale;
 }
 
