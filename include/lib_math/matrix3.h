@@ -45,8 +45,12 @@ class Matrix3x3 {
 	bool GetInverse(Matrix3x3& out) const;
 	bool Inverse();
 
+	static Vector2 Mat3TransformVec2(const Matrix3x3& mat, Vector2 vec);
+
 	static Matrix3x3 Translate(const Vector2& position);
 	static Matrix3x3 Translate(float x, float y);
+	static Matrix3x3 Scale(float x, float y);
+	static Matrix3x3 Rotate(float radians);
 
 	Vector3 GetColum(int colum) const;
 	Vector3 GetLine(int line) const;
@@ -223,19 +227,39 @@ inline bool Matrix3x3::Inverse() {
 	return false;
 }
 
+inline Vector2 Matrix3x3::Mat3TransformVec2(const Matrix3x3& mat, Vector2 vec){
+	vec.x = {mat.m[0] * vec.x + mat.m[3] * vec.y + mat.m[6] * 1.0f };
+	vec.y = {mat.m[1] * vec.x + mat.m[4] * vec.y + mat.m[7] * 1.0f };
+	return vec;
+}
+
 inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {
-	Matrix3x3 result;
-	result.Identity();
+	Matrix3x3 result = result.Identity();
 	result.m[6] = mov_vector.x;
 	result.m[7] = mov_vector.y; 
 	return result;
 }
 
 inline Matrix3x3 Matrix3x3::Translate(float x, float y) { 
-	Matrix3x3 result;
-	result.Identity();
+	Matrix3x3 result = result.Identity();
 	result.m[6] = x; 
 	result.m[7] = y; 
+	return result;
+}
+
+inline Matrix3x3 Matrix3x3::Scale(float scale_x, float scale_y){
+	Matrix3x3 result = result.Identity();
+	result.m[0] = scale_x;
+	result.m[4] = scale_y;
+	return result;
+}
+
+inline Matrix3x3 Matrix3x3::Rotate(float radians){
+	Matrix3x3 result = result.Identity();
+	result.m[0] = cosf(radians);
+	result.m[3] = -sinf(radians);
+	result.m[1] = sinf(radians);
+	result.m[4] = cosf(radians);
 	return result;
 }
 

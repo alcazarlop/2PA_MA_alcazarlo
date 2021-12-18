@@ -52,36 +52,27 @@ void Path::addPoint(const Vector2& point){
 	points_.push_back(point);
 }
 
-void Path::draw(){
+void Path::draw(SDL_Renderer* render){
 
-	// if(enabled_){
-	// 	Mat3 m = Translate(position_.x, position_.y);
-	// 	m = Mat3Multiply(Mat3Scale(scale_.x, scale_.y), m);
-	// 	m = Mat3Multiply(Mat3Rotate(rotation_), m);
+	if(enabled_){
+		Matrix3x3 transform_matrix = transform_matrix.Identity();
+		Matrix3x3 translate = translate.Multiply(Matrix3x3::Translate(position_.x, position_.y));
+		Matrix3x3 scale = scale.Multiply(Matrix3x3::Scale(scale_.x, scale_.y));
+		Matrix3x3 rotate = rotate.Multiply(Matrix3x3::Rotate(rotation_));
+		transform_matrix.Multiply(translate.Multiply(scale.Multiply(rotate)));
 
-	// 	std::vector<Vec2> transformed;
+		std::vector<Vector2> transformed_points;
 
-	// 	for(int i = 0; i < points_.size(); ++i){
-	// 		Vec2 in = points_[i];
-	// 		Vec2 aux;
-	// 		Mat3TransformVec2(m, &in, &aux);
-	// 		transformed.push_back(aux);
-	// 	}
+		for(uint32_t i = 0; i < points_.size(); ++i){
+			transformed_points.push_back(Matrix3x3::Mat3TransformVec2(transform_matrix, points_[i]));
+		}
 
-	// 	SetStrokeColor(stroke_color_[0], stroke_color_[1], 
-	// 								 stroke_color_[2] ,stroke_color_[3]);
+		for(uint32_t i = 1; i < points_.size(); ++i){
+			SDL_RenderDrawLineF(render, transformed_points[i - 1].x, transformed_points[i - 1].y, 
+													 transformed_points[i].x, transformed_points[i].y);
+		}
 
-	// 	if(solid_ > 0){
-	// 		SetFillColor(fill_color_[0], fill_color_[1], 
-	// 								 fill_color_[3], fill_color_[3]);
-	// 		DrawSolidPath((float*)transformed.data(), transformed.size(), true);
-	// 	}
-	// 	else{
-	// 		DrawPath((float*) transformed.data(), transformed.size());
-	// 	}
-
-
-	// }
+	}
 
 
 }

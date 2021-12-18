@@ -5,6 +5,8 @@
 #include <SDL.h>
 #include "sql_interface.h"
 #include "imgui_interface.h"
+#include "entity.h"
+#include "path.h"
 
 class GameManager{
 
@@ -16,32 +18,9 @@ class GameManager{
 
  	~GameManager();
 
- 	void init();
- 	void handleEvent();
- 	void update();
- 	void draw();
- 	void end();
-
- 	void run();
-
- 	SDL_Window* widnow();
- 	SDL_Renderer* render();
-
- protected:
- 	SDL_Window* window_;
- 	SDL_Renderer* render_;
- 	int screen_height_;
- 	int screen_width_;
-
  private:
  	GameManager();
  	GameManager(const GameManager& copy);
-
- 	char* title_;
- 	bool running_;
- 	
- 	Database SQL;
- 	Info *info;
 
 };
 

@@ -1,9 +1,10 @@
-//@author Manuel Alcázar López <alcazarlo@esat-alumno.com>
+//@author Manuel Alcázar López <alcazarlo@esat-alumni.com>
 //@file Entity basic class header
 
 #ifndef __ENTITY_H__
 #define __ENTITY_H__ 1
 
+#include <SDL.h>
 #include "lib_math/vector2.h"
 #include <stdint.h>
 
@@ -27,7 +28,7 @@ class Entity {
  	virtual float rotation() const;
  	virtual Vector2 scale() const;
 
- 	virtual void draw() = 0;
+ 	virtual void draw(SDL_Renderer* render) = 0;
 
  	int32_t tag_;
  	uint8_t enabled_;

@@ -14,30 +14,30 @@
 
 // }
 
-// Sprite::Sprite(const Sprite& copy){
+// // Sprite::Sprite(const Sprite& copy){
 
-// }
+// // }
 
-// Sprite::~Sprite(){
-// 	// if(sprite_ != nullptr)
-// 		// SDL_DestroyTexture();
-// }
+// // Sprite::~Sprite(){
+// // 	// if(sprite_ != nullptr)
+// // 		// SDL_DestroyTexture();
+// // }
 
-// void Sprite::size(int32_t* width, int32_t* height) const {
-// 	// if((sprite_ != nullptr) && (width >= 0) && (height >= 0)){
-// 	// 	width = algo
-// 	// 	height = algo
-// 	// }
-// }
+// // void Sprite::size(int32_t* width, int32_t* height) const {
+// // 	// if((sprite_ != nullptr) && (width >= 0) && (height >= 0)){
+// // 	// 	width = algo
+// // 	// 	height = algo
+// // 	// }
+// // }
 
-// void Sprite::getPixel(int32_t x, int32_t y, uint8_t color[5]) const {
+// // void Sprite::getPixel(int32_t x, int32_t y, uint8_t color[5]) const {
 
-// }
+// // }
 
-// void Sprite::draw(){
-// 	if(enable_){
-// 		if(sprite_ != nullptr){
+// // void Sprite::draw(){
+// // 	if(enable_){
+// // 		if(sprite_ != nullptr){
 			
-// 		}
-// 	}
-// }
+// // 		}
+// // 	}
+// // }

@@ -178,9 +178,11 @@ inline float Matrix2x2::Determinant() const {
 	return (this->m[0] * this->m[3] - this->m[1] * this->m[2]);
 }
 
-// inv = 1 / det * adj?
 inline Matrix2x2 Matrix2x2::Inverse() const {
-	return Matrix2x2();
+	Matrix2x2 result;
+	if(this->Determinant() != 0.0f)
+		result = this->Adjoint() / this->Determinant();
+	return result;
 }
 
 inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
@@ -195,14 +197,18 @@ inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
 	return result;
 }
 
-//TODO determiante * -1 quizas? o adj / det ?
 inline Matrix2x2 Matrix2x2::Adjoint() const { 
-	return Matrix2x2();
+	Matrix2x2 result;
+	result.m[0] = this->m[3];
+	result.m[1] = -this->m[1];
+	result.m[2] = -this->m[2];
+	result.m[3] = this->m[0];
+	return result;
 }
 
 inline Matrix2x2 Matrix2x2::Transpose() const {
-	float array[4] = {	this->m[0], this->m[1],
-											this->m[2], this->m[3] 	};
+	float array[4] = {	this->m[0], this->m[2],
+											this->m[1], this->m[3] 	};
 	return Matrix2x2(array);
 }
 

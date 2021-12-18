@@ -6,6 +6,7 @@
 
 #include <vector>
 #include "entity.h"
+#include "lib_math/matrix3.h"
 
 class Path : public Entity {
 
@@ -16,7 +17,7 @@ class Path : public Entity {
 
 	void init();
 	void addPoint(const Vector2& point);
-	void draw() override;
+	void draw(SDL_Renderer* render) override;
 
  	uint8_t stroke_color_[4];
  	uint8_t fill_color_[4];
@@ -24,7 +25,7 @@ class Path : public Entity {
 
  protected:
  	std::vector<Vector2> points_;
-
+ 	
 };
 
 #endif
