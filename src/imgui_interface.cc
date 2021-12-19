@@ -95,29 +95,32 @@ void ImGuiMatrixCalculator(){
   static Matix4x4 Mat4B;
   static Matix4x4 resultMat4;
 
-  ImGui::SetNextWindowSize(ImVec2(700.0f, 290.0f));
+  ImGui::SetNextWindowSize(ImVec2(710.0f, 290.0f));
   ImGui::Begin("Matrix Calculator", nullptr, ImGuiWindowFlags_NoResize);
 
-  if (ImGui::BeginTable("Matrix Calculator", 3)){
+  if (ImGui::BeginTable("Matrix Calculator", 4)){
     ImGui::TableSetupColumn("Matrix A", ImGuiTableColumnFlags_WidthFixed, width); 
-    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, 25.0f);
+    ImGui::TableSetupColumn("Mat Ops", ImGuiTableColumnFlags_WidthFixed, 50.0f);
+    ImGui::TableSetupColumn("Scalar Ops", ImGuiTableColumnFlags_WidthFixed, 110.0f);
     ImGui::TableSetupColumn("Matrix B", ImGuiTableColumnFlags_WidthFixed, width);       
     ImGui::TableHeadersRow();
-
+ 
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGuiMatrixLayout("A", size, index, Mat2A, Mat3A, Mat4A, 0);
     ImGui::TableSetColumnIndex(1);
     ImGuiMatrixOperators(index, Mat2A, Mat2B, resultMat2, Mat3A, Mat3A, resultMat3, Mat4A, Mat4B, resultMat4);
     ImGui::TableSetColumnIndex(2);
+    ImGuiMatrixScalarOperators(index, Mat2A, Mat3A, Mat4A, resultMat2, resultMat3, resultMat4);
+    ImGui::TableSetColumnIndex(3);
     ImGuiMatrixLayout("B", size, index, Mat2B, Mat3B, Mat4B, 0);
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::Text("Matrix Result");
     ImGuiMatrixLayout("Result", size, index, resultMat2, resultMat3, resultMat4, 1);
     ImGui::Spacing();
-    ImGui::Text("Value Result %f", value);
-    ImGui::TableSetColumnIndex(2);
+    ImGui::Text("Determinant: %f", value);
+    ImGui::TableSetColumnIndex(3);
     ImGui::Text("Mat A Operations");
     ImGuiMatrixOperations(index, value, Mat2A, resultMat2, Mat3A, resultMat3, Mat4A, resultMat4);
 
@@ -188,6 +191,46 @@ void ImGuiMatrixOperators(int index, Matrix2x2& mat2A, Matrix2x2& mat2B, Matrix2
       case 2: resultMat4 = mat4A.Multiply(mat4B); break;
     }
   }
+}
+
+void ImGuiMatrixScalarOperators(int index, Matrix2x2& mat2A, Matrix3x3& mat3A, Matix4x4& mat4A,
+                                           Matrix2x2& resultMat2, Matrix3x3& resultMat3, Matix4x4& resultMat4)
+{
+  static float value = 0.0f;
+
+  if(ImGui::Button("+##9")){
+    switch(index){
+      case 0: resultMat2 = mat2A + value; break;
+      case 1: resultMat3 = mat3A + value; break;
+      case 2: resultMat4 = mat4A + value; break;
+    }
+  }
+  ImGui::SameLine();
+  if(ImGui::Button("*##9")){
+    switch(index){
+      case 0: resultMat2 = mat2A * value; break;
+      case 1: resultMat3 = mat3A * value; break;
+      case 2: resultMat4 = mat4A * value; break;
+    }
+  }
+  if(ImGui::Button("-##9")){
+    switch(index){
+      case 0: resultMat2 = mat2A - value; break;
+      case 1: resultMat3 = mat3A - value; break;
+      case 2: resultMat4 = mat4A - value; break;
+    }
+  }
+  ImGui::SameLine();
+
+  if(ImGui::Button("/##9")){
+    switch(index){
+      case 0: resultMat2 = mat2A / value; break;
+      case 1: resultMat3 = mat3A / value; break;
+      case 2: resultMat4 = mat4A / value; break;
+    }
+  }
+
+  ImGui::InputFloat("Scalar ", &value);
 }
 
 void ImGuiMatrixOperations(int index, float& value, Matrix2x2& mat2, Matrix2x2& resultMat2,
@@ -265,7 +308,7 @@ void ImGuiVectorCalculator(){
                                 Vec4A, Vec4B, resultVec4);
 
     ImGui::TableSetColumnIndex(2);
-    ImGuiScalarOperators(index, Vec2A, Vec3A, Vec4A, resultVec2, resultVec3, resultVec4);
+    ImGuiVectorScalarOperators(index, Vec2A, Vec3A, Vec4A, resultVec2, resultVec3, resultVec4);
 
     ImGui::TableSetColumnIndex(3);
     ImGuiVectorLayout(index, "2", Vec2B, Vec3B, Vec4B, 0);
@@ -386,8 +429,8 @@ void ImGuiVectorOperators(int index, Vector2& vec2A, Vector2& vec2B, Vector2& re
   }
 }
 
-void ImGuiScalarOperators(int index, Vector2& vec2, Vector3& vec3, Vector4& vec4,
-                                     Vector2& resVec2, Vector3& resVec3, Vector4& resVec4){
+void ImGuiVectorScalarOperators(int index, Vector2& vec2, Vector3& vec3, Vector4& vec4,
+                                           Vector2& resVec2, Vector3& resVec3, Vector4& resVec4){
 
   static float value = 0.0f;
 

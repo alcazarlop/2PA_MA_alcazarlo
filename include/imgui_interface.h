@@ -35,9 +35,13 @@ void ImGuiMatrixOperators(int index, Matrix2x2& mat2A, Matrix2x2& mat2B, Matrix2
 																		 Matrix3x3& mat3A, Matrix3x3& mat3B, Matrix3x3& resultMat3,
 																		 Matix4x4& mat4A, Matix4x4& mat4B, Matix4x4& resultMat4);
 
+void ImGuiMatrixScalarOperators(int index, Matrix2x2& mat2, Matrix3x3& mat3, Matix4x4&mat4,
+																				   Matrix2x2& resMat2, Matrix3x3& resMat3, Matix4x4& resMat4);
+
 void ImGuiMatrixOperations(int index, float& value, Matrix2x2& mat2, Matrix2x2& resultMat2,
 																		 								Matrix3x3& mat3, Matrix3x3& resultMat3,
 																		 								Matix4x4& mat4, Matix4x4& resultMat4);
+
 
 //Vector Calculation Funcs
 void ImGuiVectorCalculator();
@@ -46,7 +50,7 @@ void ImGuiVectorOperators(int index, Vector2& vec2A, Vector2& vec2B, Vector2& re
 																		 Vector3& vec3A, Vector3& vec3B, Vector3& resVec3,
 																		 Vector4& vec4A, Vector4& vec4B, Vector4 &resVec4);
 
-void ImGuiScalarOperators(int index, Vector2& vec2, Vector3& vec3, Vector4& vec4,
+void ImGuiVectorScalarOperators(int index, Vector2& vec2, Vector3& vec3, Vector4& vec4,
 																		 Vector2& resVec2, Vector3& resVec3, Vector4& resVec4);
 
 void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& resVec2,
