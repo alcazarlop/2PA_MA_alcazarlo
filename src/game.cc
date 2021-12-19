@@ -40,6 +40,7 @@ void Game::draw(){
 	SDL_RenderClear(display_.render());
 
 	ImGuiMatrixCalculator();
+	ImGuiVectorCalculator();
 
 	ImGuiRenderClear();
 	SDL_RenderPresent(display_.render());

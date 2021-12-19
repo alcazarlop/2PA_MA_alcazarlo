@@ -95,10 +95,9 @@ void ImGuiMatrixCalculator(){
   static Matix4x4 Mat4B;
   static Matix4x4 resultMat4;
 
-  ImGui::Begin("Matrix Calculator");
+  ImGui::SetNextWindowSize(ImVec2(700.0f, 290.0f));
+  ImGui::Begin("Matrix Calculator", nullptr, ImGuiWindowFlags_NoResize);
 
-  // ImGui::ShowDemoWindow();
- 
   if (ImGui::BeginTable("Matrix Calculator", 3)){
     ImGui::TableSetupColumn("Matrix A", ImGuiTableColumnFlags_WidthFixed, width); 
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, 25.0f);
@@ -114,19 +113,21 @@ void ImGuiMatrixCalculator(){
     ImGuiMatrixLayout("B", size, index, Mat2B, Mat3B, Mat4B, 0);
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
-    ImGui::Text("Mat A Operations");
-    ImGuiMatrixOperations(index, value, Mat2A, resultMat2, Mat3A, resultMat3, Mat4A, resultMat4);
-    ImGui::TableNextRow();
-    ImGui::TableNextColumn();
     ImGui::Text("Matrix Result");
     ImGuiMatrixLayout("Result", size, index, resultMat2, resultMat3, resultMat4, 1);
+    ImGui::Spacing();
     ImGui::Text("Value Result %f", value);
+    ImGui::TableSetColumnIndex(2);
+    ImGui::Text("Mat A Operations");
+    ImGuiMatrixOperations(index, value, Mat2A, resultMat2, Mat3A, resultMat3, Mat4A, resultMat4);
 
     ImGui::EndTable();
   }
 
   if(ImGui::Button("Matrix 2x2")) { index = 0; size = 2; width = 120.0f; }
+  ImGui::SameLine();
   if(ImGui::Button("Matrix 3x3")) { index = 1; size = 3; width = 200.0f; }
+  ImGui::SameLine();
   if(ImGui::Button("Matrix 4x4")) { index = 2; size = 4; width = 250.0f; }
 
   ImGui::End();
@@ -225,5 +226,274 @@ void ImGuiMatrixOperations(int index, float& value, Matrix2x2& mat2, Matrix2x2& 
       break;
     }
   }
+}    
 
-}                                    
+void ImGuiVectorCalculator(){
+
+  static int index = 0;
+  static float res = 0.0f;
+
+  static Vector2 Vec2A;
+  static Vector2 Vec2B;
+  static Vector2 resultVec2;
+
+  static Vector3 Vec3A;
+  static Vector3 Vec3B;
+  static Vector3 resultVec3;
+
+  static Vector4 Vec4A;
+  static Vector4 Vec4B;
+  static Vector4 resultVec4;
+
+  ImGui::SetNextWindowSize(ImVec2(500.0f, 300.0f));
+  ImGui::Begin("Vector Calculator", nullptr,  ImGuiWindowFlags_NoResize);
+
+  if(ImGui::BeginTable("Vector2", 4)){
+    ImGui::TableSetupColumn("Vector A", ImGuiTableColumnFlags_WidthFixed, 100.0f); 
+    ImGui::TableSetupColumn("Vector Ops", ImGuiTableColumnFlags_WidthFixed, 80.0f); 
+    ImGui::TableSetupColumn("Scalar Ops", ImGuiTableColumnFlags_WidthFixed, 110.0f); 
+    ImGui::TableSetupColumn("Vector B", ImGuiTableColumnFlags_WidthFixed, 180.0f); 
+    ImGui::TableHeadersRow();
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGuiVectorLayout(index, "1", Vec2A, Vec3A, Vec4A, 0);
+
+    ImGui::TableSetColumnIndex(1);
+    ImGuiVectorOperators(index, Vec2A, Vec2B, resultVec2, 
+                                Vec3A, Vec3B, resultVec3, 
+                                Vec4A, Vec4B, resultVec4);
+
+    ImGui::TableSetColumnIndex(2);
+    ImGuiScalarOperators(index, Vec2A, Vec3A, Vec4A, resultVec2, resultVec3, resultVec4);
+
+    ImGui::TableSetColumnIndex(3);
+    ImGuiVectorLayout(index, "2", Vec2B, Vec3B, Vec4B, 0);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::Text("Resutl");
+    ImGuiVectorLayout(index, "3", resultVec2, resultVec3, resultVec4, 1);
+    ImGui::Spacing();
+    ImGui::Text("Value %f", res);
+
+    ImGui::TableSetColumnIndex(2);
+    ImGui::Text("All operations \nare apply \nover Vector A");
+
+    ImGui::TableSetColumnIndex(3);
+    ImGui::Text("Operations");
+    ImGuiVectorOperations(index, Vec2A, Vec2B, resultVec2,
+                                 Vec3A, Vec3B, resultVec3,
+                                 Vec4A, Vec4B, resultVec4,
+                                 res);
+
+
+    ImGui::EndTable();
+  }
+
+  if(ImGui::Button("Vector 2")) { index = 0; } ImGui::SameLine();
+  if(ImGui::Button("Vector 3")) { index = 1; } ImGui::SameLine();
+  if(ImGui::Button("Vector 4")) { index = 2; }
+
+  ImGui::End();
+
+}
+
+void ImGuiVectorLayout(int index, char* id, Vector2& vec2, Vector3& vec3, Vector4& vec4, char flag){
+
+  char* buffer_X = (char*) calloc(5, sizeof(char));
+  char* buffer_Y = (char*) calloc(5, sizeof(char));
+  char* buffer_Z = (char*) calloc(5, sizeof(char));
+  char* buffer_W = (char*) calloc(5, sizeof(char));
+
+  buffer_X = strcat(buffer_X, "x##");
+  buffer_Y = strcat(buffer_Y, "y##");
+  buffer_Z = strcat(buffer_Z, "z##");
+  buffer_W = strcat(buffer_W, "w##");
+
+  switch(index){
+    case 0: 
+    {
+      if(flag == 0){
+        ImGui::PushItemWidth(60.0f);
+        ImGui::InputFloat(strcat(buffer_X, id), &vec2.x);
+        ImGui::InputFloat(strcat(buffer_Y, id), &vec2.y);
+      }
+      if(flag == 1){
+        ImGui::Text("x %f", vec2.x);
+        ImGui::Text("y %f", vec2.y);
+      }
+      break;
+    }
+    case 1: 
+    {
+      if(flag == 0){
+        ImGui::PushItemWidth(60.0f);
+        ImGui::InputFloat(strcat(buffer_X, id), &vec3.x);
+        ImGui::InputFloat(strcat(buffer_Y, id), &vec3.y);
+        ImGui::InputFloat(strcat(buffer_Z, id), &vec3.z);
+      }
+      if(flag == 1){
+        ImGui::Text("x %f", vec3.x);
+        ImGui::Text("y %f", vec3.y);
+        ImGui::Text("z %f", vec3.z);
+      }
+      break;
+    }
+    case 2: 
+    {
+      if(flag == 0){
+        ImGui::PushItemWidth(60.0f);
+        ImGui::InputFloat(strcat(buffer_X, id), &vec4.x);
+        ImGui::InputFloat(strcat(buffer_Y, id), &vec4.y);
+        ImGui::InputFloat(strcat(buffer_Z, id), &vec4.z);
+        ImGui::InputFloat(strcat(buffer_W, id), &vec4.w);
+      }
+      if(flag == 1){
+        ImGui::Text("x %f", vec4.x);
+        ImGui::Text("y %f", vec4.y);
+        ImGui::Text("z %f", vec4.z);
+        ImGui::Text("w %f", vec4.w);
+      }
+      break;
+    }
+  }
+
+  free(buffer_X);
+  free(buffer_Y);
+  free(buffer_Z);
+  free(buffer_W);
+
+}
+
+void ImGuiVectorOperators(int index, Vector2& vec2A, Vector2& vec2B, Vector2& resVec2,
+                                     Vector3& vec3A, Vector3& vec3B, Vector3& resVec3,
+                                     Vector4& vec4A, Vector4& vec4B, Vector4& resVec4)
+{
+  if(ImGui::Button("+##2")){
+    switch(index){
+      case 0: resVec2 = vec2A + vec2B; break;
+      case 1: resVec3 = vec3A + vec3B; break;
+      case 2: resVec4 = vec4A + vec4B; break;
+    }
+  }
+  if(ImGui::Button("-##2")){
+     switch(index){
+      case 0: resVec2 = vec2A - vec2B; break;
+      case 1: resVec3 = vec3A - vec3B; break;
+      case 2: resVec4 = vec4A - vec4B; break;
+    }
+  }
+}
+
+void ImGuiScalarOperators(int index, Vector2& vec2, Vector3& vec3, Vector4& vec4,
+                                     Vector2& resVec2, Vector3& resVec3, Vector4& resVec4){
+
+  static float value = 0.0f;
+
+  if(ImGui::Button("+##4")){
+    switch(index){
+      case 0: resVec2 = vec2 + value; break;
+      case 1: resVec3 = vec3 + value; break;
+      case 2: resVec4 = vec4 + value; break;
+    }
+  }
+  ImGui::SameLine();
+  if(ImGui::Button("-##4")){
+     switch(index){
+      case 0: resVec2 = vec2 - value; break;
+      case 1: resVec3 = vec3 - value; break;
+      case 2: resVec4 = vec4 - value; break;
+    }
+  }
+  if(ImGui::Button("*##4")){
+     switch(index){
+      case 0: resVec2 = vec2 * value; break;
+      case 1: resVec3 = vec3 * value; break;
+      case 2: resVec4 = vec4 * value; break;
+    }
+  }
+  ImGui::SameLine();
+  if(ImGui::Button("/##4")){
+     switch(index){
+      case 0: resVec2 = vec2 / value; break;
+      case 1: resVec3 = vec3 / value; break;
+      case 2: resVec4 = vec4 / value; break;
+    }
+  }
+
+  ImGui::InputFloat("Scalar:", &value);
+
+}
+
+void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& resVec2,
+                                      Vector3& vec3A, Vector3& vec3B, Vector3& resVec3,
+                                      Vector4& vec4A, Vector4& vec4B, Vector4& resVec4,
+                                      float& res)
+{
+
+  static float time = 0.0f;
+
+  switch(index){
+    case 0:
+    {
+      if(ImGui::Button("Magnitude")){ res = vec2A.Magnitude(); } 
+      ImGui::SameLine();
+      if(ImGui::Button("SqrMagnitude")) { res = vec2A.SqrMagnitude(); }
+
+      if(ImGui::Button("Distance")) { res = vec2A.Distance(vec2A, vec2B); }
+      ImGui::SameLine();
+      if(ImGui::Button("Dot Product")) { res = vec2A.DotProduct(vec2A, vec2B); }
+
+      if(ImGui::Button("Scale")) { vec2A.Scale(vec2A); } 
+      ImGui::SameLine();
+      if(ImGui::Button("Normalize")) {resVec2 = vec2A.Normalized(); }
+
+      if(ImGui::Button("Lerp")){ resVec2 = resVec2.Lerp(vec2A, vec2B, time); }
+      ImGui::SameLine();
+      if(ImGui::Button("Lerp Unclamped")){ resVec2 = resVec2.LerpUnclamped(vec2A, vec2B, time); }
+    }
+    break;
+    case 1:
+    {
+      if(ImGui::Button("Magnitude")){ res = vec3A.Magnitude(); } 
+      ImGui::SameLine();
+      if(ImGui::Button("SqrMagnitude")) { res = vec3A.SqrMagnitude(); }
+
+      if(ImGui::Button("Distance")) { res = vec3A.Distance(vec3A, vec3B); }
+      ImGui::SameLine();
+      if(ImGui::Button("Dot Product")) { res = vec3A.DotProduct(vec3A, vec3B); }
+
+      if(ImGui::Button("Scale")) { vec3A.Scale(vec3A); } 
+      ImGui::SameLine();
+      if(ImGui::Button("Normalize")) {resVec3 = vec3A.Normalized(); }
+
+      if(ImGui::Button("Lerp")){ resVec3 = resVec3.Lerp(vec3A, vec3B, time); }
+      ImGui::SameLine();
+      if(ImGui::Button("Lerp Unclamped")){ resVec3 = resVec3.LerpUnclamped(vec3A, vec3B, time); }
+
+      if(ImGui::Button("Cross Product")){ resVec3 = resVec3.CrossProduct(vec3A, vec3B); }
+      ImGui::SameLine();
+      if(ImGui::Button("Reflect")){ resVec3 = resVec3.Reflect(vec3A, vec3B); }
+    }
+    break;
+    case 2:
+    {
+      if(ImGui::Button("Magnitude")){ res = vec4A.Magnitude(); } 
+      ImGui::SameLine();
+      if(ImGui::Button("SqrMagnitude")) { res = vec4A.SqrMagnitude(); }
+
+      if(ImGui::Button("Distance")) { res = vec4A.Distance(vec4A, vec4B); }
+      ImGui::SameLine();
+      if(ImGui::Button("Dot Product")) { res = vec4A.DotProduct(vec4A, vec4B); }
+
+      if(ImGui::Button("Scale")) { vec4A.Scale(vec4A); } 
+      ImGui::SameLine();
+      if(ImGui::Button("Normalize")) {resVec4 = vec4A.Normalized(); }
+
+      if(ImGui::Button("Lerp")){ resVec4 = resVec4.Lerp(vec4A, vec4B, time); }
+    }
+    break;
+  }
+  ImGui::InputFloat("Time", &time);
+}

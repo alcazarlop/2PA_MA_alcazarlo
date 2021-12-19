@@ -36,11 +36,11 @@ class Vector4 {
  	void operator=(const Vector4& other);
 
  	float Magnitude() const;
- 	void Normalize();
- 	Vector4 Normalized() const;
+ 	float SqrMagnitude() const;
 
  	void Scale(Vector4 scale);
- 	float SqrMagnitude() const;
+ 	void Normalize();
+ 	Vector4 Normalized() const;
 
  	static float Distance(const Vector4& a, const Vector4& b);
  	static float DotProduct(Vector4 a, Vector4 b);

@@ -47,6 +47,7 @@ class Vector3 {
 
  	static Vector3 Lerp(const Vector3& a, const Vector3& b, float time);
  	static Vector3 LerpUnclamped(const Vector3& a, const Vector3& b, float time);
+ 	
  	static Vector3 CrossProduct(const Vector3& a, const Vector3& b);
  	static Vector3 Reflect(const Vector3& direction, const Vector3& normal);
 
