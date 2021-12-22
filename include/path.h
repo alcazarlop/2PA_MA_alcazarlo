@@ -6,7 +6,10 @@
 
 #include <vector>
 #include "entity.h"
+#include "lib_math/vector2.h"
+#include "lib_math/vector3.h"
 #include "lib_math/matrix3.h"
+#include "lib_math/matrix4.h"
 
 class Path : public Entity {
 
@@ -16,16 +19,16 @@ class Path : public Entity {
 	virtual ~Path();
 
 	void init();
-	void addPoint(const Vector2& point);
+	void addPoints(const float& pos_x, const float& pos_y);
+	void addPoints(const Vector2& vec);
+
 	void draw(SDL_Renderer* render) override;
+	void cube(SDL_Renderer* render);
 
- 	uint8_t stroke_color_[4];
- 	uint8_t fill_color_[4];
- 	uint8_t solid_;
+protected:
+	std::vector<Vector2> points_;
+	Matrix3x3 transform_;
 
- protected:
- 	std::vector<Vector2> points_;
- 	
 };
 
 #endif

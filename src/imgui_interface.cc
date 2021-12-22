@@ -243,7 +243,7 @@ void ImGuiMatrixOperations(int index, float& value, Matrix2x2& mat2, Matrix2x2& 
       if(ImGui::Button("Traspose")) { resultMat2 = mat2.Transpose(); }
       ImGui::SameLine();
       if(ImGui::Button("Adjoint")) { resultMat2 = mat2.Adjoint(); }
-      if(ImGui::Button("Inverse")) { resultMat2 = mat2.Inverse(); }
+      if(ImGui::Button("Inverse")) { mat2.GetInverse(resultMat2); }
       ImGui::SameLine();
       if(ImGui::Button("Determinant")) { value = mat2.Determinant(); }
       break;
@@ -263,7 +263,7 @@ void ImGuiMatrixOperations(int index, float& value, Matrix2x2& mat2, Matrix2x2& 
       if(ImGui::Button("Transpose")) { resultMat4 = mat4.Transpose(); }
       ImGui::SameLine();
       if(ImGui::Button("Adjoint")) { resultMat4 = mat4.Adjoint(); }
-      if(ImGui::Button("Inverse")) { mat4.GetInverse(&resultMat4); }
+      if(ImGui::Button("Inverse")) { mat4.GetInverse(resultMat4); }
       ImGui::SameLine();
       if(ImGui::Button("Determinant")) { value = mat4.Determinant(); }
       break;
@@ -539,4 +539,28 @@ void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& r
     break;
   }
   ImGui::InputFloat("Time", &time);
+}
+
+void ImGui2DTransform(Path& path){
+
+  static Vector2 pos = path.position();
+  static Vector2 scale = path.scale();
+  static float angle = path.rotation();
+
+  ImGui::Begin("2D Trasnformations");
+
+  ImGui::PushItemWidth(60.0f);
+  ImGui::DragFloat("Pos X", &pos.x); 
+  ImGui::DragFloat("Pos Y", &pos.y);
+  path.set_position(pos);
+
+  ImGui::DragFloat("Scale X", &scale.x); 
+  ImGui::DragFloat("Scale Y", &scale.y);
+  path.set_scale(scale);
+
+  ImGui::DragFloat("Rotation", &angle, 0.1f);
+  path.set_rotation(angle);
+
+  ImGui::End();
+
 }

@@ -87,9 +87,3 @@ void ClearList(Info** head){
 	else return;
 
 }
-
-void Queries(){
-
-
-	
-}

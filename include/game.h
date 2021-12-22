@@ -9,6 +9,8 @@
 
 #include "sdk_window.h"
 #include "imgui_interface.h"
+#include "sql_interface.h"
+#include "path.h"
 
 class Game {
 	
@@ -30,6 +32,9 @@ class Game {
  	bool running_;
 
   Window display_;
+  Path path_;
+  Database database_;
+  Info* info_;
 
 };
 

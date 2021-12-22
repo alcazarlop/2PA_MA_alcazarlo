@@ -36,6 +36,8 @@ class Matrix2x2 {
 	Vector2 GetLine(int line) const;
 	Vector2 GetColum(int colum) const;
 
+	void GetInverse(Matrix2x2& out) const;
+
 	Matrix2x2 Identity() const;
 	Matrix2x2 Multiply(const Matrix2x2& other) const;
 	Matrix2x2 Adjoint() const;
@@ -115,7 +117,7 @@ inline Matrix2x2 Matrix2x2::operator-(float value) const {
 	Matrix2x2 result(*this);
 	for(int i = 0; i < 4; ++i)
 		result.m[i] -= value;
-	return Matrix2x2();
+	return result;
 }
 
 inline void Matrix2x2::operator-=(float value) {
@@ -140,7 +142,7 @@ inline Matrix2x2 Matrix2x2::operator/(float value) const {
 	Matrix2x2 result(*this);
 	for(int i = 0; i < 4; ++i)
 		result.m[i] *= value;
-	return Matrix2x2();
+	return result;
 }
 
 inline void Matrix2x2::operator/=(float value) {
@@ -166,6 +168,7 @@ inline bool Matrix2x2::operator!=(const Matrix2x2& other) const {
 inline void Matrix2x2::operator=(const Matrix2x2& other) {
 	for(int i = 0; i < 4; ++i)
 		this->m[i] = other.m[i];
+	Matrix2x2(*this);
 }
 
 inline Matrix2x2 Matrix2x2::Identity() const {
@@ -184,6 +187,12 @@ inline Matrix2x2 Matrix2x2::Inverse() const {
 		result = this->Adjoint() / this->Determinant();
 	return result;
 }
+
+inline void Matrix2x2::GetInverse(Matrix2x2& out) const {
+	if(this->Determinant() != 0.0f)
+		out = this->Adjoint() / this->Determinant();
+}
+
 
 inline Matrix2x2 Matrix2x2::Multiply(const Matrix2x2& other) const {
 

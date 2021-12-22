@@ -5,6 +5,7 @@
 #include "vector3.h"
 #include "matrix2.h"
 #include <stdio.h>
+#include <stdint.h>
 
 class Matrix3x3 {
 
@@ -256,9 +257,10 @@ inline Matrix3x3 Matrix3x3::Scale(float scale_x, float scale_y){
 
 inline Matrix3x3 Matrix3x3::Rotate(float radians){
 	Matrix3x3 result = result.Identity();
+	radians = radians * 3.14f / 180.0f;
 	result.m[0] = cosf(radians);
-	result.m[3] = -sinf(radians);
-	result.m[1] = sinf(radians);
+	result.m[1] = -sinf(radians);
+	result.m[3] = sinf(radians);
 	result.m[4] = cosf(radians);
 	return result;
 }
@@ -295,11 +297,11 @@ inline Matrix3x3 Matrix3x3::Adjoint() const {
 	float det_7[4] = { this->m[0], this->m[2], this->m[3], this->m[5] };
 	float det_8[4] = { this->m[0], this->m[1], this->m[3], this->m[4] };
 
-	float array[9] = { Matrix2x2(det_0).Determinant(), -Matrix2x2(det_3).Determinant(), Matrix2x2(det_6).Determinant(),
-										 -Matrix2x2(det_1).Determinant(), Matrix2x2(det_4).Determinant(), -Matrix2x2(det_7).Determinant(),
-										 Matrix2x2(det_2).Determinant(), -Matrix2x2(det_5).Determinant(), Matrix2x2(det_8).Determinant() };
+	float array[9] = { Matrix2x2(det_0).Determinant(), -Matrix2x2(det_1).Determinant(), Matrix2x2(det_2).Determinant(),
+										 -Matrix2x2(det_3).Determinant(), Matrix2x2(det_4).Determinant(), -Matrix2x2(det_5).Determinant(),
+										 Matrix2x2(det_6).Determinant(), -Matrix2x2(det_7).Determinant(), Matrix2x2(det_8).Determinant() };
 
-	return Matrix3x3(array).Transpose();
+	return Matrix3x3(array);
 }
 
 inline Matrix3x3 Matrix3x3::Transpose() const {
