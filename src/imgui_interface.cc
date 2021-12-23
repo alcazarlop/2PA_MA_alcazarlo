@@ -109,7 +109,7 @@ void ImGuiMatrixCalculator(){
     ImGui::TableSetColumnIndex(0);
     ImGuiMatrixLayout("A", size, index, Mat2A, Mat3A, Mat4A, 0);
     ImGui::TableSetColumnIndex(1);
-    ImGuiMatrixOperators(index, Mat2A, Mat2B, resultMat2, Mat3A, Mat3A, resultMat3, Mat4A, Mat4B, resultMat4);
+    ImGuiMatrixOperators(index, Mat2A, Mat2B, resultMat2, Mat3A, Mat3B, resultMat3, Mat4A, Mat4B, resultMat4);
     ImGui::TableSetColumnIndex(2);
     ImGuiMatrixScalarOperators(index, Mat2A, Mat3A, Mat4A, resultMat2, resultMat3, resultMat4);
     ImGui::TableSetColumnIndex(3);
