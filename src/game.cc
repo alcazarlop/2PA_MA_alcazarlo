@@ -9,6 +9,9 @@ Game::Game(){
 Game::Game(const Game& copy){
 	running_ = copy.running_;
 	display_ = copy.display_;
+	path_ = copy.path_;
+	info_ = copy.info_;
+	database_ = copy.database_;
 }
 
 Game::~Game(){}
@@ -64,6 +67,11 @@ void Game::draw(){
 	ImGuiMatrixCalculator();
 	ImGuiVectorCalculator();
 	ImGuiShowData(&database_, &info_);
+
+	path_.draw(display_.render());
+	path_.cube(display_.render());
+	ImGui3DTransform(path_);
+	ImGui2DTransform(path_);
 
 	ImGuiRenderClear();
 	SDL_RenderPresent(display_.render());

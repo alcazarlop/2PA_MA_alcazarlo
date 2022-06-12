@@ -564,3 +564,29 @@ void ImGui2DTransform(Path& path){
   ImGui::End();
 
 }
+
+void ImGui3DTransform(Path& path){
+
+  static Vector3 pos = path.cubePosition();
+  static Vector3 scale = path.cubeScalation();
+  static Vector3 angle = path.cubeRotation();
+
+  ImGui::Begin("3D Trasnformations");
+
+  ImGui::PushItemWidth(60.0f);
+  ImGui::DragFloat("Pos X", &pos.x); 
+  ImGui::DragFloat("Pos Y", &pos.y);
+  path.setCubePosition(pos);
+
+  ImGui::DragFloat("Scale X", &scale.x); 
+  ImGui::DragFloat("Scale Y", &scale.y);
+  path.setCubeScalation(scale);
+
+  ImGui::DragFloat("Rotation X", &angle.x, 0.1f);
+  ImGui::DragFloat("Rotation Y", &angle.y, 0.1f);
+  ImGui::DragFloat("Rotation Z", &angle.z, 0.1f);
+  path.setCubeRotation(angle);
+
+  ImGui::End();
+
+}

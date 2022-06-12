@@ -67,6 +67,9 @@ class Matix4x4{
 	  float near, float far) const;
 
   static Vector3 Mat4TransformVec3(const Matix4x4& mat, Vector3 vec);
+  static Vector4 Mat4TransformVec4(const Matix4x4& mat, Vector4 vec);
+  Vector3 Mat4TransformVec3(const Vector3& vec);
+  Vector4 Mat4TransformVec4(const Vector4& vec);
 
   Vector4 GetColum(int colum) const;
   Vector4 GetLine(int line) const;
@@ -105,24 +108,51 @@ inline Matix4x4 Matix4x4::Identity() const {
   return Matix4x4(array); 
 }
 
-inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
-  Matix4x4 result;
-  unsigned int file = 0, colum = 0;
-  for(int i = 0; i < 16; ++i){
-    float temp = 0.0f;
-    if(i % 4 == 0 && i != 0){ 
-      file++; 
-      colum = 0; 
-    }
-    for(int j = 0; j < 4; ++j){
-      temp += this->m[file * 4 + j] * other.m[j * 4 + colum];
-    }
-    colum++;
-    result.m[i] = temp;
-  }
-  return result;
-}
+// inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
+//   Matix4x4 result;
+//   unsigned int file = 0, colum = 0;
+//   for(int i = 0; i < 16; ++i){
+//     float temp = 0.0f;
+//     if(i % 4 == 0 && i != 0){ 
+//       file++; 
+//       colum = 0; 
+//     }
+//     for(int j = 0; j < 4; ++j){
+//       temp += this->m[file * 4 + j] * other.m[j * 4 + colum];
+//     }
+//     colum++;
+//     result.m[i] = temp;
+//   }
+//   return result;
+// }
 
+inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
+
+float tmp[16];
+
+  tmp[0]  = (this->m[0] * other.m[0]) + (this->m[4] * other.m[1]) + (this->m[8] * other.m[2]) + (this->m[12] * other.m[3]);
+  tmp[4]  = (this->m[0] * other.m[4]) + (this->m[4] * other.m[5]) + (this->m[8] * other.m[6]) + (this->m[12] * other.m[7]);
+  tmp[8]  = (this->m[0] * other.m[8]) + (this->m[4] * other.m[9]) + (this->m[8] * other.m[10]) + (this->m[12] * other.m[11]);
+  tmp[12] = (this->m[0] * other.m[12]) + (this->m[4] * other.m[13]) + (this->m[8] * other.m[14]) + (this->m[12] * other.m[15]);
+
+  tmp[1]  = (this->m[1] * other.m[0]) + (this->m[5] * other.m[1]) + (this->m[9] * other.m[2]) + (this->m[13] * other.m[3]);
+  tmp[5]  = (this->m[1] * other.m[4]) + (this->m[5] * other.m[5]) + (this->m[9] * other.m[6]) + (this->m[13] * other.m[7]);
+  tmp[9]  = (this->m[1] * other.m[8]) + (this->m[5] * other.m[9]) + (this->m[9] * other.m[10]) + (this->m[13] * other.m[11]);
+  tmp[13] = (this->m[1] * other.m[12]) + (this->m[5] * other.m[13]) + (this->m[9] * other.m[14]) + (this->m[13] * other.m[15]);
+
+  tmp[2] = (this->m[2] * other.m[0]) + (this->m[6] * other.m[1]) + (this->m[10] * other.m[2]) + (this->m[14] * other.m[3]);
+  tmp[6] = (this->m[2] * other.m[4]) + (this->m[6] * other.m[5]) + (this->m[10] * other.m[6]) + (this->m[14] * other.m[7]);
+  tmp[10] = (this->m[2] * other.m[8]) + (this->m[6] * other.m[9]) + (this->m[10] * other.m[10]) + (this->m[14] * other.m[11]);
+  tmp[14] = (this->m[2] * other.m[12]) + (this->m[6] * other.m[13]) + (this->m[10] * other.m[14]) + (this->m[14] * other.m[15]);
+  
+  tmp[3] = (this->m[3] * other.m[0]) + (this->m[7] * other.m[1]) + (this->m[11] * other.m[2]) + (this->m[15] * other.m[3]);
+  tmp[7] = (this->m[3] * other.m[4]) + (this->m[7] * other.m[5]) + (this->m[11] * other.m[6]) + (this->m[15] * other.m[7]);
+  tmp[11] = (this->m[3] * other.m[8]) + (this->m[7] * other.m[9]) + (this->m[11] * other.m[10]) + (this->m[15] * other.m[11]);
+  tmp[15] = (this->m[3] * other.m[12]) + (this->m[7] * other.m[13]) + (this->m[11] * other.m[14]) + (this->m[15] * other.m[15]);
+
+  return Matix4x4(tmp);
+
+}
 
 inline float Matix4x4::Determinant() const {
   
@@ -247,17 +277,17 @@ inline Matix4x4 Matix4x4::Transpose() const {
 
 inline Matix4x4 Matix4x4::Translate(const Vector3& distance){
   Matix4x4 result = result.Identity();
-  result.m[12] = distance.x;
-  result.m[13] = distance.y;
-  result.m[14] = distance.z;
+  result.m[3] = distance.x;
+  result.m[7] = distance.y;
+  result.m[11] = distance.z;
   return result;
 }
 
 inline Matix4x4 Matix4x4::Translate(float x, float y, float z){
   Matix4x4 result = result.Identity();
-  result.m[12] = x;
-  result.m[13] = y;
-  result.m[14] = z;
+  result.m[3] = x;
+  result.m[7] = y;
+  result.m[11] = z;
   return result;
 }
 
@@ -480,15 +510,47 @@ inline Vector3 Matix4x4::Mat4TransformVec3(const Matix4x4& mat, Vector3 vec){
   vec.x = {mat.m[0] * vec.x + mat.m[4] * vec.y + mat.m[8] * vec.z + mat.m[12] * 1.0f };
   vec.y = {mat.m[1] * vec.x + mat.m[5] * vec.y + mat.m[9] * vec.z + mat.m[13] * 1.0f };
   vec.z = {mat.m[2] * vec.x + mat.m[6] * vec.y + mat.m[10] * vec.z + mat.m[14] * 1.0f };
+  return vec;
+}
+
+inline Vector4 Matix4x4::Mat4TransformVec4(const Matix4x4& mat, Vector4 vec){
+  vec.x = {mat.m[0] * vec.x + mat.m[4] * vec.y + mat.m[8] * vec.z + mat.m[12] * vec.w };
+  vec.y = {mat.m[1] * vec.x + mat.m[5] * vec.y + mat.m[9] * vec.z + mat.m[13] * vec.w };
+  vec.z = {mat.m[2] * vec.x + mat.m[6] * vec.y + mat.m[10] * vec.z + mat.m[14] * vec.w };
+  vec.w = {mat.m[3] * vec.x + mat.m[7] * vec.y + mat.m[11] * vec.z + mat.m[15] * vec.w };
   return vec;  
 }
 
+inline Vector4 Matix4x4::Mat4TransformVec4(const Vector4& v) {
+  Vector4 tmp;
+  tmp.x = m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3] * v.w;
+  tmp.y = m[4] * v.x + m[5] * v.y + m[6] * v.z + m[7] * v.w;
+  tmp.z = m[8] * v.x + m[9] * v.y + m[10] * v.z + m[11] * v.w;
+  tmp.w = m[12] * v.x + m[13] * v.y + m[14] * v.z + m[15] * v.w;
+  return tmp;
+}
+
+inline Vector3 Matix4x4::Mat4TransformVec3(const Vector3& v) {
+  Vector4 tmp;
+  tmp.x = v.x;
+  tmp.y = v.y;
+  tmp.z = v.z;
+  tmp.w = 1.0f;
+
+  Vector4 result = Mat4TransformVec4(tmp);
+  result.x /= result.w;
+  result.y /= result.w;
+  result.z /= result.w;
+
+  Vector3 k(result.x, result.y, result.z);
+
+  return k;
+}
+
 inline Matix4x4 Matix4x4::ProjectionMatrix(){
-  float array[16] = {1.0f, 0.0f, 0.0f, 0.0f,
-                     0.0f, 1.0f, 0.0f, 0.0f,  
-                     0.0f, 0.0f, 1.0f, 0.0f,
-                     0.0f, 0.0f, 1.0f, 0.0f };
-  return Matix4x4(array);
+  Matix4x4 result = result.Identity();
+  result.m[14] = 1.0f;
+  return result;
 }
 
 #endif

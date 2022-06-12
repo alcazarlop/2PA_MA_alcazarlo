@@ -241,7 +241,7 @@ void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& r
 
 //ImGui 2D Transform Funcs
 
-/** @brief (DEPRECATED) Displays a window to transform a determinate 2D entity 
+/** @brief Displays a window to transform a determinate 2D entity 
  * 
  * The function contains different options to transform
  * a determinate 2D figure
@@ -249,5 +249,11 @@ void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& r
  * @param The path class to draw
  */ 
 void ImGui2DTransform(Path& path);
+
+/** @brief Displays a window to transform a 3D default cube 
+ * 
+ * @param The path class to draw
+ */ 
+void ImGui3DTransform(Path& path);
 
 #endif // __IMGUI_INTERFACE_H__

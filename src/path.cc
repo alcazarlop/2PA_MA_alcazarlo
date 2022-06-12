@@ -1,11 +1,16 @@
 
 #include "path.h"
+#include <stdio.h>
 
 Path::Path(){
 	position_ = {0.0f, 0.0f};
 	rotation_ = 0.0f;
 	scale_ = {0.0f, 0.0f};
 	transform_ = Matrix3x3();
+	cube_position_ = Vector3(400.0f, 300.0f, 5.0f);
+	cube_scale_ = Vector3(250.0f, 250.0f, 1.0f);
+	cube_rotation_ = Vector3();
+	enabled_ = 1;
 }
 
 Path::Path(const Path& other){
@@ -83,17 +88,19 @@ void Path::cube(SDL_Renderer* render){
 
 	if(enabled_){
 		Matix4x4 m = m.Identity();
-		m = m.Multiply(Matix4x4::Scale(50.0f, 50.0f, 50.0f));
-		m = m.Multiply(Matix4x4::RotateX(0.0f));
-		m = m.Multiply(Matix4x4::Translate(300.0f, 300.0f, 0.0f));
+		m = Matix4x4::Translate(cube_position_.x, cube_position_.y, 0.0f).Multiply(m);
+		m = Matix4x4::Scale(cube_scale_.x, cube_scale_.y, cube_scale_.z).Multiply(m);
+		m = Matix4x4::ProjectionMatrix().Multiply(m);
+		m = Matix4x4::Translate(0.0f, 0.0f, cube_position_.z).Multiply(m);
+		m = Matix4x4::RotateX(cube_rotation_.x).Multiply(m);
+		m = Matix4x4::RotateY(cube_rotation_.y).Multiply(m);
+		m = Matix4x4::RotateZ(cube_rotation_.z).Multiply(m);
 
-		m = m.Multiply(m.PerspectiveMatrix(10.0f, 10.0f, 0.1f, 50.0f));
+		Vector3 tr_points[8];
 
-		std::vector<Vector3> tr_points;
-		Vector3 tmp;
 		for(int i = 0; i < 8; ++i){
-			tmp = Matix4x4::Mat4TransformVec3(m, figure_points[i]);
-			tr_points.push_back(tmp);
+			 tr_points[i] = m.Mat4TransformVec3(figure_points[i]);
+			//tr_points[i] = Matix4x4::Mat4TransformVec3(m, figure_points[i]);
 		}
 
 		SDL_SetRenderDrawColor(render, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -102,10 +109,34 @@ void Path::cube(SDL_Renderer* render){
 			SDL_RenderDrawLineF(render, tr_points[i].x, tr_points[i].y,
 																	tr_points[(i + 1) % 4].x, tr_points[(i + 1) % 4].y);
 			SDL_RenderDrawLineF(render, tr_points[i].x, tr_points[i].y,
-																	tr_points[i + 4].x, tr_points[i + 4].y);
-			SDL_RenderDrawLineF(render, tr_points[i + 4].x, tr_points[i + 4].y,
-																	tr_points[((i + 1) + 4) % 4].x, tr_points[((i + 1) + 4) % 4].y);
+																	tr_points[(i + 4)].x, tr_points[(i + 4)].y);
+			SDL_RenderDrawLineF(render, tr_points[(i + 4)].x, tr_points[(i + 4)].y,
+																	tr_points[((i + 1) % 4) + 4].x, tr_points[((i + 1) % 4) + 4].y);
 		}
-
 	}
+
+}
+
+Vector3 Path::cubePosition() const {
+	return cube_position_;
+}
+
+Vector3 Path::cubeScalation() const {
+	return cube_scale_;
+}
+
+Vector3 Path::cubeRotation() const {
+	return cube_rotation_;
+}
+
+void Path::setCubePosition(const Vector3& pos){
+	cube_position_ = pos;
+}
+
+void Path::setCubeScalation(const Vector3& scale){
+	cube_scale_ = scale;
+}
+
+void Path::setCubeRotation(const Vector3& rot){
+	cube_rotation_ = rot;
 }

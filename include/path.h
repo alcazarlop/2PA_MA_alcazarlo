@@ -1,5 +1,5 @@
-/// @author
-/// @file
+///@author Manuel Alcázar López <alcazarlo@esat-alumni.com>
+///@file Path basic class header
 
 #ifndef __PATH_H__
 #define __PATH_H__ 1
@@ -25,9 +25,21 @@ class Path : public Entity {
 	void draw(SDL_Renderer* render) override;
 	void cube(SDL_Renderer* render);
 
+	Vector3 cubePosition() const;
+	Vector3 cubeScalation() const;
+	Vector3 cubeRotation() const;
+
+	void setCubePosition(const Vector3& pos);
+	void setCubeScalation(const Vector3& scale);
+	void setCubeRotation(const Vector3& angle);
+
 protected:
 	std::vector<Vector2> points_;
 	Matrix3x3 transform_;
+
+	Vector3 cube_position_;
+	Vector3 cube_scale_;
+	Vector3 cube_rotation_;
 
 };
 
