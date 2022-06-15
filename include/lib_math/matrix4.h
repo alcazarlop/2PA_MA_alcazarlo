@@ -108,24 +108,6 @@ inline Matix4x4 Matix4x4::Identity() const {
   return Matix4x4(array); 
 }
 
-// inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
-//   Matix4x4 result;
-//   unsigned int file = 0, colum = 0;
-//   for(int i = 0; i < 16; ++i){
-//     float temp = 0.0f;
-//     if(i % 4 == 0 && i != 0){ 
-//       file++; 
-//       colum = 0; 
-//     }
-//     for(int j = 0; j < 4; ++j){
-//       temp += this->m[file * 4 + j] * other.m[j * 4 + colum];
-//     }
-//     colum++;
-//     result.m[i] = temp;
-//   }
-//   return result;
-// }
-
 inline Matix4x4 Matix4x4::Multiply(const Matix4x4& other) const {
 
 float tmp[16];

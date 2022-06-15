@@ -46,7 +46,8 @@ class Matrix3x3 {
 	bool GetInverse(Matrix3x3& out) const;
 	bool Inverse();
 
-	static Vector2 Mat3TransformVec2(const Matrix3x3& mat, Vector2 vec);
+	Vector3 Mat3TransformVec3(const Vector3& v);
+	Vector2 Mat3TransformVec2(const Vector2& v);
 
 	static Matrix3x3 Translate(const Vector2& position);
 	static Matrix3x3 Translate(float x, float y);
@@ -228,10 +229,25 @@ inline bool Matrix3x3::Inverse() {
 	return false;
 }
 
-inline Vector2 Matrix3x3::Mat3TransformVec2(const Matrix3x3& mat, Vector2 vec){
-	vec.x = {mat.m[0] * vec.x + mat.m[3] * vec.y + mat.m[6] * 1.0f };
-	vec.y = {mat.m[1] * vec.x + mat.m[4] * vec.y + mat.m[7] * 1.0f };
-	return vec;
+inline Vector3 Matrix3x3::Mat3TransformVec3(const Vector3& v) {
+	Vector3 tmp;
+	tmp.x = m[0] * v.x + m[3] * v.y + m[6] * v.z;
+	tmp.y = m[1] * v.x + m[4] * v.y + m[7] * v.z;
+	tmp.z = m[2] * v.x + m[5] * v.y + m[8] * v.z;
+	return tmp;
+}
+
+inline Vector2 Matrix3x3::Mat3TransformVec2(const Vector2& v){
+	Vector3 tmp;
+	tmp.x = v.x;
+	tmp.y = v.y;
+	tmp.z = 1.0f;
+
+	Vector3 result = Mat3TransformVec3(tmp);
+	result.x /= result.z;
+	result.y /= result.z;
+
+	return Vector2(result.x, result.y);
 }
 
 inline Matrix3x3 Matrix3x3::Translate(const Vector2& mov_vector) {
@@ -266,21 +282,21 @@ inline Matrix3x3 Matrix3x3::Rotate(float radians){
 }
 
 inline Matrix3x3 Matrix3x3::Multiply(const Matrix3x3& other) const {
-  Matrix3x3 result;
-  unsigned int file = 0, colum = 0;
-  for(int i = 0; i < 9; ++i){
-    float temp = 0.0f;
-    if(i % 3 == 0 && i != 0){ 
-      file++; 
-      colum = 0; 
-    }
-    for(int j = 0; j < 3; ++j){
-      temp += this->m[file * 3 + j] * other.m[j * 3 + colum];
-    }
-    colum++;
-    result.m[i] = temp;
-  }
-  return result;
+  float tmp[9];
+
+  tmp[0] = (this->m[0] * other.m[0]) + (this->m[3] * other.m[1]) + (this->m[6] * other.m[2]);
+  tmp[3] = (this->m[0] * other.m[3]) + (this->m[3] * other.m[4]) + (this->m[6] * other.m[5]);
+  tmp[6] = (this->m[0] * other.m[6]) + (this->m[3] * other.m[7]) + (this->m[6] * other.m[8]);
+
+  tmp[1] = (this->m[1] * other.m[0]) + (this->m[4] * other.m[1]) + (this->m[7] * other.m[2]);
+  tmp[4] = (this->m[1] * other.m[3]) + (this->m[4] * other.m[4]) + (this->m[7] * other.m[5]);
+  tmp[7] = (this->m[1] * other.m[6]) + (this->m[4] * other.m[7]) + (this->m[7] * other.m[8]);
+
+  tmp[2] = (this->m[2] * other.m[0]) + (this->m[5] * other.m[1]) + (this->m[8] * other.m[2]);
+  tmp[5] = (this->m[2] * other.m[3]) + (this->m[5] * other.m[4]) + (this->m[8] * other.m[5]);
+  tmp[8] = (this->m[2] * other.m[6]) + (this->m[5] * other.m[7]) + (this->m[8] * other.m[8]);
+
+  return Matrix3x3(tmp);
 }
 
 inline Matrix3x3 Matrix3x3::Adjoint() const {

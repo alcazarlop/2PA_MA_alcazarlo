@@ -16,7 +16,8 @@
 #include "lib_math/vector3.h"
 #include "lib_math/vector4.h"
 #include "lib_math/math_utils.h"
-#include "path.h"
+#include "ship.h"
+#include "cube.h"
 
 /** @brief Initializes ImGui for SDL2
  * 
@@ -67,7 +68,7 @@ void ImGuiExit();
  * @param The struct that contain the information 
  * 				consulted in the database
  */
-void ImGuiShowData(Database* database, Info** info);
+void ImGuiShowData(Database* database);
 
 /** @brief Shows the information consulted in the database
  * 
@@ -76,7 +77,7 @@ void ImGuiShowData(Database* database, Info** info);
  *  @param The struct that contain the information 
  * 				consulted in the database
  */
-void ShowTableData(Info** head);
+void ShowTableData(Database* db);
 
 //Matrix Calcualtion Funcs
 
@@ -248,12 +249,18 @@ void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& r
  * 
  * @param The path class to draw
  */ 
-void ImGui2DTransform(Path& path);
+void ImGui2DTransform(Ship& ship);
 
 /** @brief Displays a window to transform a 3D default cube 
  * 
  * @param The path class to draw
  */ 
-void ImGui3DTransform(Path& path);
+void ImGui3DTransform(Cube& cube);
+
+
+void ReadTable(Database* database);
+void CreateTable(Database* database);
+void DeleteTable(Database* database);
+void AddColum(Database* database);
 
 #endif // __IMGUI_INTERFACE_H__

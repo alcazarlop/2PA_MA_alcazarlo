@@ -246,11 +246,7 @@ inline Vector3 Vector3::LerpUnclamped(const Vector3& a, const Vector3& b, float 
 }
 
 inline Vector3 Vector3::Reflect(const Vector3& direction, const Vector3& normal) {
-	normal.Normalized();
-	float dot = DotProduct(direction, normal);
-	return Vector3(direction.x - 2.0f * dot * normal.x,
-								 direction.y - 2.0f * dot * normal.y,
-								 direction.z - 2.0f * dot * normal.z);
+	return (direction - normal * (DotProduct(direction, normal)) * 2);
 }
 
 #endif // __VECTOR3_H__

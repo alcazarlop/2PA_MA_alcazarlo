@@ -10,7 +10,9 @@
 #include "sdk_window.h"
 #include "imgui_interface.h"
 #include "sql_interface.h"
-#include "path.h"
+#include "ship.h"
+#include "cube.h"
+#include "sprite.h"
 
 class Game {
 	
@@ -32,10 +34,10 @@ class Game {
  	bool running_;
 
   Window display_;
-  Path path_;
+  Ship ship_;
+  Cube cube_;
+  Sprite sprite_;
   Database database_;
-  Info* info_;
-
 };
 
 #endif

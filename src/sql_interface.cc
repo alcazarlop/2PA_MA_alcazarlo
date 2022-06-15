@@ -1,7 +1,8 @@
 
 #include "sql_interface.h"
+#include <string>
 
-void SQLInit(Database* database, Info** info, const char* path){
+void SQLInit(Database* database, const char* path){
 
 	database->sql_query = (char*) calloc(kQuerySize, sizeof(char));
 	database->err_msg = (char*) calloc(kQuerySize, sizeof(char));
@@ -15,46 +16,87 @@ void SQLInit(Database* database, Info** info, const char* path){
 		sqlite3_close(database->db);
 	}
 
-	database->sql_query = "SELECT name FROM sqlite_master where type ='table'";
-	SQLExecute(database, info);
-
-}
-
-void SQLExecute(Database* database, Info** info){
-
-	database->rc = sqlite3_exec(database->db, database->sql_query, callback, (Info**) info, &database->err_msg);
-
-	if (database->rc != SQLITE_OK ) {
-		fprintf(stderr, "Failed to select data\n");
-		fprintf(stderr, "SQL error: %s\n", database->err_msg);
-
-		sqlite3_free(database->err_msg);
-		sqlite3_close(database->db);
-	}
-
-}
-
-void SQLClose(Database *database)
-{
-	free(database->err_msg);
-	free(database->sql_query);
+	SQLExecute_read(database, "SELECT name FROM sqlite_master where type ='table'");
 	sqlite3_close(database->db);
 }
 
-int callback(void* notused, int argc, char** argv, char** azcolname){
+void SQLExecute_read(Database* database, char* query){
+  database->colname.clear();
+  database->value.clear();
+	database->rc = sqlite3_exec(database->db, query, read_from_table_callback, (Database*) database, &database->err_msg);
+	if (database->rc != SQLITE_OK ) {
+		fprintf(stderr, "Failed to select data\n");
+		fprintf(stderr, "SQL error: %s\n", database->err_msg);
+		sqlite3_free(database->err_msg);
+	}
 
-	Info** head = (Info**) notused;
+	for(int i = 0; i < database->colname.size(); ++i){
+		printf("%s : %s\n",database->colname[i], database->value[i]);
+	}
+}
+
+void SQLExecute_create(Database* database, char* query){
+  database->colname.clear();
+  database->value.clear();
+	database->rc = sqlite3_exec(database->db, query, NULL, nothing_callback, &database->err_msg);
+	if (database->rc != SQLITE_OK ) {
+		fprintf(stderr, "Failed to select data\n");
+		fprintf(stderr, "SQL error: %s\n", database->err_msg);
+		sqlite3_free(database->err_msg);
+	}
+}
+
+void SQLOpen(Database* database, const char* path){
+	database->rc = sqlite3_open(path, &database->db);
+	if (database->rc != SQLITE_OK) {
+		fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(database->db));
+		sqlite3_close(database->db);
+	}
+}
+
+void SQLClose(Database *database){
+	sqlite3_close(database->db);
+}
+
+void SQLExit(Database *database){
+	free(database->err_msg);
+	free(database->sql_query);
+	database->colname.clear();
+	database->value.clear();
+	sqlite3_close(database->db);
+}
+
+int read_from_table_callback(void* notused, int argc, char** argv, char** azcolname){
+	Database* temp = (Database*) notused;
 
 	for(int i = 0; i < argc; ++i){
-		InsertList(head, argv[i], azcolname[i]);
+		char* value = (char*)malloc(sizeof(kMaxInfoSize));
+		char* colum = (char*)malloc(sizeof(kMaxInfoSize));
+
+		strcpy(value, argv[i]);
+		temp->value.push_back(value);
+
+		strcpy(colum, azcolname[i]);
+		temp->colname.push_back(colum);
 	}
+
 	return 0;
 }
 
-void InsertList(Info** head, char* argv, char* azcolname){
+int nothing_callback(void* notused, int argc, char** argv, char** azcolname){
+	Database* temp = (Database*) notused;
+	argc = 0;
+	argv = NULL;
+	azcolname= NULL;
+
+	return 0;
+}
+
+void InsertList(Info** head, int col, char* argv, char* azcolname){
 
 	Info* node = (Info*) calloc(1, sizeof(Info));
 
+	node->columns = col;
 	node->value = (char*) calloc(kMaxInfoSize, sizeof(char));
 	node->colname = (char*) calloc(kMaxInfoSize, sizeof(char));
 
@@ -70,8 +112,21 @@ void InsertList(Info** head, char* argv, char* azcolname){
 
 }
 
-void ClearList(Info** head){
+void ResetList(Info** head){
+if(nullptr != *head){
+		Info* node = *head;
+		Info* next = nullptr;
 
+		while(node){
+			next = node->next;
+			free(node->value); node->value = nullptr;
+			free(node->colname); node->colname = nullptr;
+			node = next;
+		}
+	}
+}
+
+void ClearList(Info** head){
 	if(nullptr != *head){
 		Info* node = *head;
 		Info* next = nullptr;
@@ -84,6 +139,4 @@ void ClearList(Info** head){
 			node = next;
 		}
 	}
-	else return;
-
 }

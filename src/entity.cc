@@ -27,7 +27,7 @@ void Entity::set_position(const Vector2& pos) {
 	position_ = pos;
 }
 
-void Entity::set_rotation(const float rot) {
+void Entity::set_rotation(const float& rot) {
 	rotation_ = rot;
 }
 

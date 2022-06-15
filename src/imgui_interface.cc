@@ -29,9 +29,10 @@ void ImGuiExit(){
   ImGui_ImplSDL2_Shutdown();
 }
 
-void ImGuiShowData(Database* database, Info** info){
+void ImGuiShowData(Database* database){
 
   static bool open = false;
+  static char buffer[kQuerySize];
 
   ImGui::Begin("SQL Window", nullptr);
 
@@ -40,9 +41,9 @@ void ImGuiShowData(Database* database, Info** info){
   ImGui::TextColored(ImVec4(0,1,0,1), "%s", open ? "Open" : "Close"); 
   ImGui::SameLine();
 
-  if(ImGui::SmallButton(open ? " Close Test Database " : " Open Test Database ")){
+  if(ImGui::SmallButton(open ? " Close Database " : " Open Database ")){
     if(!open){
-      SQLInit(database, info, "../data/test.db");
+      SQLOpen(database, "../data/Game.db");
       open = true;
     }
     else{
@@ -52,28 +53,130 @@ void ImGuiShowData(Database* database, Info** info){
   }
 
   if(open){
-    ImGui::InputText("Query", database->sql_query, kQuerySize);
-    ImGui::SameLine();
-    if(ImGui::Button("Execute")){
-      SQLExecute(database, info);
-    }
-    ShowTableData(info);  
+    ShowTableData(database);  
+    ReadTable(database);
+    CreateTable(database);
+    DeleteTable(database);
+    AddColum(database);
   }
 
   ImGui::End();
 }
 
-void ShowTableData(Info** head){
-  if(nullptr != *head){
-    for(Info* node = *head; node != nullptr; node = node->next){
-      if(ImGui::CollapsingHeader(node->value)){
-        ImGui::Text("Name: %s", node->colname);
-        ImGui::Text("Value: %s", node->value);
-      }
-    }
-    ImGui::Spacing();
+void ReadTable(Database* database){
+
+  static char select[kMaxInfoSize];
+  static char from[kMaxInfoSize];
+  static char buffer[128] = {0};
+
+  ImGui::PushItemWidth(80.0f);
+  ImGui::Text("SELECT"); ImGui::SameLine();
+  strcpy(buffer, "SELECT ");
+  ImGui::InputText("##1", select, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, select);
+  ImGui::Text("FROM"); ImGui::SameLine();
+  strcat(buffer, " FROM ");
+  ImGui::InputText("##2", from, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, from);
+  if(ImGui::Button("Submit")){
+    printf("%s\n", buffer);
+    SQLExecute_read(database, buffer);
   }
-  else return;
+}
+
+void CreateTable(Database* database){
+  
+  static char create[kMaxInfoSize];
+  static char colum[kMaxInfoSize];
+  static char datatype[kMaxInfoSize];
+  static char insert[kMaxInfoSize];
+  static char buffer[128] = {0};
+
+
+  strcpy(insert, "INSERT INTO ");
+
+  ImGui::PushItemWidth(80.0f);
+  ImGui::Text("CREATE TABLE"); ImGui::SameLine();
+  strcpy(buffer, "CREATE TABLE ");
+  ImGui::InputText("##3", create, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, create);
+  strcat(insert, create);
+  ImGui::Text("COLUMN"); ImGui::SameLine();
+  strcat(buffer, " ( ");
+  ImGui::InputText("##4", colum, kMaxInfoSize); ImGui::SameLine();
+  strcat(insert, " (");
+  strcat(insert, colum);
+  strcat(insert, ")");
+  strcat(buffer, colum);
+  strcat(buffer, " , ");
+  ImGui::InputText("##5", datatype, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, datatype);
+  strcat(buffer, " )");
+
+  strcat(insert, " VALUES (NULL);");
+
+  if(ImGui::Button("Submit##2")){
+    printf("%s\n", buffer);
+    SQLExecute_create(database, buffer);
+    SQLExecute_create(database, insert);
+    SQLExecute_read(database, "SELECT name FROM sqlite_master where type ='table'");
+  }
+}
+
+void DeleteTable(Database* database){
+
+  static char delet[kMaxInfoSize];
+  static char buffer[128] = {0};
+
+  ImGui::PushItemWidth(80.0f);
+  ImGui::Text("DROP TABLE"); ImGui::SameLine();
+  strcpy(buffer, "DROP TABLE ");
+  ImGui::InputText("##6", delet, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, delet);
+
+  if(ImGui::Button("Submit##3")){
+    printf("%s\n", buffer);
+    SQLExecute_create(database, buffer);
+    SQLExecute_read(database, "SELECT name FROM sqlite_master where type ='table'");
+  }
+}
+
+void AddColum(Database* database){
+  static char insert[kMaxInfoSize];
+  static char colum[kMaxInfoSize];
+  static char values[kMaxInfoSize];
+  static char buffer[128] = {0};
+
+  ImGui::PushItemWidth(80.0f);
+  ImGui::Text("INSERT INTO"); ImGui::SameLine();
+  strcpy(buffer, "INSERT INTO ");
+  ImGui::InputText("##10", insert, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, insert);
+  ImGui::Text("COLUMN"); ImGui::SameLine();
+  ImGui::InputText("##11", colum, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, " ( ");
+  strcat(buffer, colum);
+  strcat(buffer, " ) ");
+  ImGui::Text("VALUES"); ImGui::SameLine();
+  strcat(buffer, " VALUES ");
+  ImGui::InputText("##12", values, kMaxInfoSize); ImGui::SameLine();
+  strcat(buffer, " ( ");
+  strcat(buffer, "'");
+  strcat(buffer, values);
+  strcat(buffer, "'");
+  strcat(buffer, " ) ");
+
+  if(ImGui::Button("Submit##4")){
+    printf("%s\n", buffer);
+    SQLExecute_create(database, buffer);
+  }
+
+}
+
+void ShowTableData(Database* db){
+  for(unsigned int i = 0; i < db->colname.size(); ++i){
+    ImGui::Text("%s : %s", db->colname[i], db->value[i]);
+  }
 }
 
 void ImGuiMatrixCalculator(){
@@ -541,51 +644,51 @@ void ImGuiVectorOperations(int index, Vector2& vec2A, Vector2& vec2B, Vector2& r
   ImGui::InputFloat("Time", &time);
 }
 
-void ImGui2DTransform(Path& path){
+void ImGui2DTransform(Ship& ship){
 
-  static Vector2 pos = path.position();
-  static Vector2 scale = path.scale();
-  static float angle = path.rotation();
+  static Vector2 pos = ship.position();
+  static Vector2 scale = ship.scale();
+  static float angle = ship.rotation();
 
   ImGui::Begin("2D Trasnformations");
 
   ImGui::PushItemWidth(60.0f);
   ImGui::DragFloat("Pos X", &pos.x); 
   ImGui::DragFloat("Pos Y", &pos.y);
-  path.set_position(pos);
+  ship.set_position(pos);
 
   ImGui::DragFloat("Scale X", &scale.x); 
   ImGui::DragFloat("Scale Y", &scale.y);
-  path.set_scale(scale);
+  ship.set_scale(scale);
 
   ImGui::DragFloat("Rotation", &angle, 0.1f);
-  path.set_rotation(angle);
+  ship.set_rotation(angle);
 
   ImGui::End();
 
 }
 
-void ImGui3DTransform(Path& path){
+void ImGui3DTransform(Cube& cube){
 
-  static Vector3 pos = path.cubePosition();
-  static Vector3 scale = path.cubeScalation();
-  static Vector3 angle = path.cubeRotation();
+  static Vector3 pos = cube.position();
+  static Vector3 scale = cube.scale();
+  static Vector3 angle = cube.rotation();
 
   ImGui::Begin("3D Trasnformations");
 
   ImGui::PushItemWidth(60.0f);
   ImGui::DragFloat("Pos X", &pos.x); 
   ImGui::DragFloat("Pos Y", &pos.y);
-  path.setCubePosition(pos);
+  cube.set_position(pos);
 
   ImGui::DragFloat("Scale X", &scale.x); 
   ImGui::DragFloat("Scale Y", &scale.y);
-  path.setCubeScalation(scale);
+  cube.set_scale(scale);
 
   ImGui::DragFloat("Rotation X", &angle.x, 0.1f);
   ImGui::DragFloat("Rotation Y", &angle.y, 0.1f);
   ImGui::DragFloat("Rotation Z", &angle.z, 0.1f);
-  path.setCubeRotation(angle);
+  cube.set_rotation(angle);
 
   ImGui::End();
 

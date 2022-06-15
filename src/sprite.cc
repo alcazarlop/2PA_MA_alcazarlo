@@ -11,7 +11,7 @@ Sprite::Sprite(const Sprite& copy){
 
 Sprite::~Sprite(){}
 
-SDL_Texture* Sprite::loadFromFile(char* path, SDL_Renderer* render){
+SDL_Texture* Sprite::loadFromFile(const char* path, SDL_Renderer* render){
 
 	if(nullptr != tex_){
 		SDL_DestroyTexture(tex_);

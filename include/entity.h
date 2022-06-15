@@ -22,7 +22,7 @@ class Entity {
 
  	virtual void set_position(const Vector2& pos);
  	virtual void set_scale(const Vector2& scale);
- 	virtual void set_rotation(const float rot);
+ 	virtual void set_rotation(const float& rot);
 
  	virtual Vector2 position() const;
  	virtual Vector2 scale() const;
